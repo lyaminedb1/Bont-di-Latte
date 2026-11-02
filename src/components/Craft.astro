@@ -134,7 +134,7 @@ const nums = lang === 'ar' ? ['٠١', '٠٢', '٠٣', '٠٤'] : ['01', '02', '03
       block-size: 1px;
     }
     .craft[data-pinned] .step:last-child .step-rail { inset-inline-end: 0; background: linear-gradient(to var(--rail-end, right), var(--line), transparent); }
-    [dir='rtl'] .step:last-child .step-rail { --rail-end: left; }
+    :global([dir='rtl']) .step:last-child .step-rail { --rail-end: left; }
     .craft[data-pinned] .step-drop { inset-block-start: -0.55rem; inset-inline-start: 0; }
 
     /* Activé par le script : la section devient haute et le contenu reste collé à l'écran */
@@ -181,7 +181,7 @@ const nums = lang === 'ar' ? ['٠١', '٠٢', '٠٣', '٠٤'] : ['01', '02', '03
       transform-origin: var(--origin, left);
       transform: scaleX(var(--craft-p, 0));
     }
-    [dir='rtl'] .craft-progress span { --origin: right; }
+    :global([dir='rtl']) .craft-progress span { --origin: right; }
     .craft[data-pinned] [data-reveal] { opacity: 1; transform: none; }
   }
 </style>

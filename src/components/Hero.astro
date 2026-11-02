@@ -149,7 +149,7 @@ const mobilePoster = tall?.poster ?? wide?.poster;
       -webkit-mask-image: linear-gradient(to var(--fade-to, right), transparent 0%, #000 22%, #000 88%, transparent);
       mask-image: linear-gradient(to var(--fade-to, right), transparent 0%, #000 22%, #000 88%, transparent);
     }
-    [dir='rtl'] .hero-media { --fade-to: left; }
+    :global([dir='rtl']) .hero-media { --fade-to: left; }
     .hero-poster img, .hero-video { object-fit: contain; }
     .hero-content { padding-block: 0; }
     .hero-content > * { max-inline-size: min(34rem, 40%); }

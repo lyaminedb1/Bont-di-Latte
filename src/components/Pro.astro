@@ -136,7 +136,7 @@ const fr = t('fr').pro.form;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   .field input[dir='ltr'] { text-align: start; }
-  [dir='rtl'] .field input[dir='ltr'] { text-align: end; }
+  :global([dir='rtl']) .field input[dir='ltr'] { text-align: end; }
   .field textarea { resize: vertical; min-block-size: 5.5rem; }
   .field select {
     appearance: none;
@@ -146,7 +146,7 @@ const fr = t('fr').pro.form;
     background-size: 1.1rem;
     background-position: right 0.9rem center;
   }
-  [dir='rtl'] .field select { background-position: left 0.9rem center; }
+  :global([dir='rtl']) .field select { background-position: left 0.9rem center; }
   .field ::placeholder { color: var(--ink-soft); opacity: 1; }
   .field :is(input, select, textarea):focus-visible { outline: 3px solid var(--milk); outline-offset: 2px; border-color: var(--navy); }
   .field :is(input, select, textarea):user-invalid { border-color: var(--red); box-shadow: 0 0 0 3px rgb(200 50 43 / 0.35); }

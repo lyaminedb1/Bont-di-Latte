@@ -119,6 +119,6 @@ const c = site.contact;
   }
   .map-cta :global(svg) { inline-size: 1.2rem; block-size: 1.2rem; flex: none; }
   .map-cta :global(.icon-arrow) { margin-inline-start: auto; transition: transform 0.3s var(--ease-out); }
-  @media (hover: hover) { .map:hover .map-cta :global(.icon-arrow) { transform: translateX(4px); } [dir='rtl'] .map:hover .map-cta :global(.icon-arrow) { transform: scaleX(-1) translateX(4px); } }
+  @media (hover: hover) { .map:hover .map-cta :global(.icon-arrow) { transform: translateX(4px); } :global([dir='rtl']) .map:hover .map-cta :global(.icon-arrow) { transform: scaleX(-1) translateX(4px); } }
   .map:focus-visible { outline-offset: 4px; }
 </style>
