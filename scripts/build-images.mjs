@@ -10,9 +10,9 @@ const MILK = '#F7F0E6';
 
 await mkdir(OUT, { recursive: true });
 
-// Logo ovale : on rogne la marge transparente puis on décline en 2 largeurs.
+// Logo ovale : on rogne la marge transparente puis on décline en 3 largeurs.
 const ovale = sharp(SRC_OVALE).trim();
-for (const w of [480, 960]) {
+for (const w of [480, 720, 960]) {
   await ovale.clone().resize({ width: w }).webp({ quality: 88, alphaQuality: 90 }).toFile(`${OUT}/logo-ovale-${w}.webp`);
 }
 await ovale.clone().resize({ width: 960 }).png({ compressionLevel: 9, palette: true }).toFile(`${OUT}/logo-ovale-960.png`);

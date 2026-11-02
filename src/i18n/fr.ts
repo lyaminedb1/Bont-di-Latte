@@ -1,13 +1,13 @@
 // Textes français. La version arabe (ar.ts) suit exactement la même structure.
-// Règle : ne jamais écrire « italienne », « italiana » ni « Made in Italy ».
+// Règle : ne jamais écrire « italienne », « italiana » ni « Made in Italy ».
 export const fr = {
   lang: 'fr',
   dir: 'ltr',
   meta: {
     title: 'Bontà di Latte · Mozzarella fresca 100 % naturelle, fabriquée en Algérie',
     description:
-      'Fromagerie artisanale algérienne : mozzarella fresca filée à la main, avec du lait frais, du sel et du temps. Sans poudre de lait, sans amidon, sans conservateur. Tarifs pour pizzerias, restaurants et hôtels.',
-    ogAlt: 'Logo Bontà di Latte, fromagerie : mozzarella 100 % naturelle',
+      'Fromagerie artisanale algérienne : mozzarella fresca filée à la main, avec du lait frais, du sel et du temps. Sans poudre de lait, sans amidon, sans conservateur. Tarifs pour pizzerias, restaurants et hôtels.',
+    ogAlt: 'Logo Bontà di Latte, fromagerie : mozzarella 100 % naturelle',
   },
   a11y: {
     skip: 'Aller au contenu',
@@ -43,7 +43,7 @@ export const fr = {
     ctaSecondary: 'Espace professionnels',
     badges: ['100 % naturelle', 'Sans additif', 'Fatta a mano'],
     scroll: 'Défiler',
-    videoLabel: 'Animation : une goutte de lait tombe, forme une couronne, puis le logo Bontà di Latte',
+    videoLabel: 'Animation : une goutte de lait tombe, forme une couronne, puis le logo Bontà di Latte',
   },
   promise: {
     kicker: 'Notre promesse',
@@ -51,7 +51,7 @@ export const fr = {
     titleEm: 'ce qu’il n’y a pas',
     titleAfter: '.',
     lead:
-      'Retournez le paquet : la liste est courte, et c’est voulu. Une bonne mozzarella n’a besoin que d’un lait frais et de patience. Le reste, ce sont des raccourcis que nous ne prenons pas.',
+      'Retournez le paquet : la liste est courte, et c’est voulu. Une bonne mozzarella n’a besoin que d’un lait frais et de patience. Le reste, ce sont des raccourcis que nous ne prenons pas.',
     points: [
       { title: 'Lait frais, jamais en poudre', text: 'Collecté puis transformé rapidement, pour garder son goût de crème.' },
       { title: 'Le temps fait le travail', text: 'Le caillé mûrit à son rythme, sans accélérateur ni épaississant.' },
@@ -60,7 +60,7 @@ export const fr = {
       heading: 'Ingrédients',
       product: 'Mozzarella fresca · pâte filée',
       withoutHeading: 'Ce que vous ne trouverez pas',
-      withoutSr: 'Sans : ',
+      withoutSr: 'Sans : ',
       storageLabel: 'Conservation',
       originLabel: 'Fabrication',
       origin: 'Fatta a mano, en Algérie',
@@ -73,9 +73,9 @@ export const fr = {
     titleEm: 'aucun raccourci',
     titleAfter: '.',
     lead:
-      'La pasta filata est un savoir-faire de casaro : on chauffe, on étire, on façonne à la main jusqu’à ce que la pâte devienne lisse et brillante.',
+      'La pasta filata est un savoir-faire de casaro : on chauffe, on étire, on façonne à la main jusqu’à ce que la pâte devienne lisse et brillante.',
     hint: 'Faites défiler pour suivre la fabrication',
-    videoLabel: 'Vidéo : le filage de la pâte à la main',
+    videoLabel: 'Vidéo : le filage de la pâte à la main',
     steps: [
       { title: 'Le lait', text: 'Un lait de vache frais, contrôlé à réception, travaillé le jour même.' },
       { title: 'Le caillé', text: 'Avec ferments et présure, le lait prend doucement. On tranche, on égoutte, on attend.' },
@@ -88,10 +88,10 @@ export const fr = {
     titleBefore: 'Trois formats, ',
     titleEm: 'une même pâte',
     titleAfter: '.',
-    lead: 'Pour la table familiale comme pour le four à pizza : choisissez la forme, le goût reste le même.',
+    lead: 'Pour la table familiale comme pour le four à pizza : choisissez la forme, le goût reste le même.',
     formatsLabel: 'Formats',
     forLabel: 'Pour',
-    videoLabel: 'Vidéo : nos mozzarellas fraîches',
+    videoLabel: 'Vidéo : nos mozzarellas fraîches',
     items: {
       'fior-di-latte': {
         tagline: 'La boule classique',
@@ -112,14 +112,14 @@ export const fr = {
         alt: 'Illustration d’un pain de mozzarella pour pizza',
       },
     },
-    tasteTitle: 'Envie de goûter ?',
+    tasteTitle: 'Envie de goûter ?',
     tasteText: 'Écrivez-nous pour connaître les points de vente près de chez vous.',
     tasteCta: 'Où trouver nos mozzarellas',
-    tasteMessage: 'Bonjour Bontà di Latte, où puis-je acheter votre mozzarella ?',
+    tasteMessage: 'Bonjour Bontà di Latte, où puis-je acheter votre mozzarella ?',
   },
   pro: {
     kicker: 'Professionnels',
-    titleBefore: 'Pizzerias, restaurants, hôtels : ',
+    titleBefore: 'Pizzerias, restaurants, hôtels : ',
     titleEm: 'parlons volumes',
     titleAfter: '.',
     lead: 'Un fournisseur local, régulier et joignable. Recevez une grille de tarifs adaptée à votre consommation.',
@@ -142,7 +142,7 @@ export const fr = {
       city: 'Ville / wilaya',
       phone: 'Téléphone',
       phoneHint: 'Nous vous rappelons ou vous écrivons sur WhatsApp.',
-      volume: 'Volume estimé par semaine',
+      volume: 'Volume par semaine',
       volumeOptions: ['Moins de 10 kg', '10 à 30 kg', '30 à 100 kg', 'Plus de 100 kg'],
       message: 'Message (facultatif)',
       messagePlaceholder: 'Produits qui vous intéressent, fréquence de livraison…',
@@ -157,11 +157,11 @@ export const fr = {
     titleBefore: 'Passez nous ',
     titleEm: 'voir',
     titleAfter: '.',
-    lead: 'Une question, une commande, une visite ? Nous répondons par téléphone et sur WhatsApp.',
+    lead: 'Une question, une commande, une visite ? Nous répondons par téléphone et sur WhatsApp.',
     phone: 'Téléphone',
     whatsapp: 'WhatsApp',
     whatsappText: 'Écrire un message',
-    whatsappMessage: 'Bonjour Bontà di Latte !',
+    whatsappMessage: 'Bonjour Bontà di Latte !',
     email: 'E-mail',
     address: 'Adresse',
     hours: 'Horaires',

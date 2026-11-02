@@ -91,6 +91,7 @@ const links = [
     transition: transform 0.35s var(--ease-out);
   }
   [dir='rtl'] .main-nav a::after { --origin: right; }
+  :lang(ar) .main-nav a { font-size: 1.05rem; }
   @media (hover: hover) { .main-nav a:hover::after { transform: scaleX(1); } }
   .main-nav a[aria-current='true']::after { transform: scaleX(1); }
 

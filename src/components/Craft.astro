@@ -114,22 +114,28 @@ const nums = lang === 'ar' ? ['٠١', '٠٢', '٠٣', '٠٤'] : ['01', '02', '03
     .step { padding-inline-start: 0; padding-block-start: var(--space-m); border-block-start: 1px solid var(--line); }
   }
 
-  /* ---------- Ordinateur : défilement horizontal piloté par le défilement vertical ---------- */
+  /* ---------- Ordinateur ---------- */
   @media (min-width: 1024px) {
-    .craft-steps { display: flex; flex: none; gap: clamp(2.5rem, 4vw, 4.5rem); }
-    .craft-track { display: flex; align-items: center; gap: clamp(2.5rem, 4vw, 4.5rem); max-inline-size: none; }
-    .craft-intro { flex: 0 0 min(34rem, 40vw); }
-    .craft-video { flex: 0 0 auto; inline-size: min(22rem, 26vw); }
-    .step { flex: 0 0 clamp(17rem, 22vw, 21rem); padding-inline-start: 0; padding-block-start: 3rem; }
-    .step-rail {
+    /* Sans épinglage (mouvement réduit) : grille de 4 colonnes */
+    .craft:not([data-pinned]) .craft-steps { grid-template-columns: repeat(4, 1fr); gap: var(--space-l); }
+    .craft:not([data-pinned]) .step { padding-inline-start: 0; padding-block-start: var(--space-m); border-block-start: 1px solid var(--line); }
+    .craft:not([data-pinned]) .step-rail { display: none; }
+
+    /* Avec épinglage : défilement horizontal piloté par le défilement vertical */
+    .craft[data-pinned] .craft-steps { display: flex; flex: none; gap: clamp(2.5rem, 4vw, 4.5rem); }
+    .craft[data-pinned] .craft-track { display: flex; align-items: center; gap: clamp(2.5rem, 4vw, 4.5rem); }
+    .craft[data-pinned] .craft-intro { flex: 0 0 min(34rem, 40vw); }
+    .craft[data-pinned] .craft-video { flex: 0 0 auto; inline-size: min(22rem, 26vw); }
+    .craft[data-pinned] .step { flex: 0 0 clamp(17rem, 22vw, 21rem); padding-inline-start: 0; padding-block-start: 3rem; }
+    .craft[data-pinned] .step-rail {
       inset-block: 0.55rem auto;
       inset-inline: 0 calc(-1 * clamp(2.5rem, 4vw, 4.5rem));
       inline-size: auto;
       block-size: 1px;
     }
-    .step:last-child .step-rail { inset-inline-end: 0; background: linear-gradient(to var(--rail-end, right), var(--line), transparent); }
+    .craft[data-pinned] .step:last-child .step-rail { inset-inline-end: 0; background: linear-gradient(to var(--rail-end, right), var(--line), transparent); }
     [dir='rtl'] .step:last-child .step-rail { --rail-end: left; }
-    .step-drop { inset-block-start: -0.55rem; inset-inline-start: 0; }
+    .craft[data-pinned] .step-drop { inset-block-start: -0.55rem; inset-inline-start: 0; }
 
     /* Activé par le script : la section devient haute et le contenu reste collé à l'écran */
     .craft[data-pinned] { block-size: var(--craft-h, 300vh); }
@@ -144,7 +150,7 @@ const nums = lang === 'ar' ? ['٠١', '٠٢', '٠٣', '٠٤'] : ['01', '02', '03
       padding-block: calc(var(--header-h) + 1rem) var(--space-l);
       overflow: hidden;
     }
-    .craft[data-pinned] .craft-track { transform: translate3d(var(--craft-x, 0px), 0, 0); will-change: transform; inline-size: max-content; margin-inline: 0; }
+    .craft[data-pinned] .craft-track { max-inline-size: none; transform: translate3d(var(--craft-x, 0px), 0, 0); will-change: transform; inline-size: max-content; margin-inline: 0; }
     .craft[data-pinned] .craft-hint {
       display: flex;
       align-items: center;

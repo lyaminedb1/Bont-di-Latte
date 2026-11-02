@@ -92,7 +92,7 @@ export const ar: Dict = {
     titleAfter: '.',
     lead: 'لمائدة العائلة أو لفرن البيتزا: اختر الشكل، والطعم واحد.',
     formatsLabel: 'الأحجام',
-    forLabel: 'لـ',
+    forLabel: 'لمن',
     videoLabel: 'فيديو: موزاريلا طازجة',
     items: {
       'fior-di-latte': {

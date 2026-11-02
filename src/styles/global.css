@@ -106,7 +106,11 @@ h1, h2, h3, h4 {
 :lang(ar) :is(h1, h2, h3, h4) { line-height: 1.4; letter-spacing: 0; font-weight: 700; }
 h1 em, h2 em, h3 em { font-style: italic; font-weight: 500; }
 /* En arabe, pas d'italique : le mot en valeur prend la couleur et le trait */
-:lang(ar) :is(h1, h2, h3) em { font-style: normal; color: inherit; background: linear-gradient(transparent 82%, rgb(200 50 43 / 0.35) 82%); }
+:lang(ar) :is(h1, h2, h3) em {
+  font-style: normal;
+  text-decoration: underline 2px var(--red);
+  text-underline-offset: 0.3em;
+}
 p, li { text-wrap: pretty; }
 
 /* Texte latin (marque, mots italiens) dans la page arabe */

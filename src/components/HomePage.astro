@@ -26,7 +26,7 @@ const tall = findVideo('hero-9x16');
         {wide?.poster && <link rel="preload" as="image" href={wide.poster} media={tall?.poster ? '(min-aspect-ratio: 801/1000)' : undefined} fetchpriority="high" />}
       </>
     ) : (
-      <link rel="preload" as="image" href="/img/logo-ovale-960.webp" imagesrcset="/img/logo-ovale-480.webp 480w, /img/logo-ovale-960.webp 960w" imagesizes="(max-width: 640px) 80vw, 34rem" fetchpriority="high" />
+      <link rel="preload" as="image" href="/img/logo-ovale-960.webp" imagesrcset="/img/logo-ovale-480.webp 480w, /img/logo-ovale-720.webp 720w, /img/logo-ovale-960.webp 960w" imagesizes="(max-width: 640px) 84vw, 30rem" fetchpriority="high" />
     )}
   </Fragment>
   <Header lang={lang} />

@@ -119,23 +119,28 @@ if (craft && track) {
 const lazyVideos = document.querySelectorAll<HTMLVideoElement>('[data-lazy-video]');
 if (lazyVideos.length) {
   const allowMotion = !reduceMotion.matches && !saveData;
-  if (allowMotion && 'IntersectionObserver' in window) {
-    const loadVideo = (v: HTMLVideoElement) => {
-      if (v.dataset.loaded) return;
-      v.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => (s.src = s.dataset.src!));
-      v.dataset.loaded = '1';
-      v.load();
-    };
-    // Préchargement un peu avant l'arrivée à l'écran
+  const setPoster = (v: HTMLVideoElement) => {
+    if (v.dataset.poster && !v.poster) v.poster = v.dataset.poster;
+  };
+  const loadVideo = (v: HTMLVideoElement) => {
+    setPoster(v);
+    if (!allowMotion || v.dataset.loaded) return;
+    v.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => (s.src = s.dataset.src!));
+    v.dataset.loaded = '1';
+    v.load();
+  };
+  if ('IntersectionObserver' in window) {
+    // Poster + vidéo chargés un peu avant l'arrivée à l'écran
     const near = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && loadVideo(e.target as HTMLVideoElement)),
-      { rootMargin: '300px 0px' },
+      { rootMargin: '400px 0px' },
     );
     // Lecture / pause selon la visibilité réelle
     const visible = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
           const v = e.target as HTMLVideoElement;
+          if (!allowMotion) return;
           if (e.isIntersecting) {
             loadVideo(v);
             v.play().catch(() => {});
@@ -147,8 +152,10 @@ if (lazyVideos.length) {
       near.observe(v);
       visible.observe(v);
     });
+  } else {
+    lazyVideos.forEach(setPoster); // navigateur ancien : poster seul
   }
-  // Sinon : seul le poster reste affiché (aucune source chargée).
+  // Mouvement réduit / économie de données : seul le poster s'affiche.
 }
 
 /* ---------- 5. Vidéo du héros : pause hors écran pour économiser la batterie ---------- */
