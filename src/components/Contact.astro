@@ -1,0 +1,124 @@
+---
+import { t, type Lang } from '../i18n';
+import { site, whatsappLink } from '../config/site';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const all = t(lang);
+const d = all.contact;
+const c = site.contact;
+---
+
+<section id="contact" class="section section--cream contact" aria-labelledby="contact-title">
+  <div class="container contact-grid">
+    <div>
+      <p class="kicker" data-reveal>{d.kicker}</p>
+      <h2 id="contact-title" data-reveal>{d.titleBefore}<em>{d.titleEm}</em>{d.titleAfter}</h2>
+      <p class="lead" data-reveal>{d.lead}</p>
+
+      <dl class="contact-list" data-reveal>
+        <div>
+          <dt><Icon name="phone" />{d.phone}</dt>
+          <dd><a href={`tel:${c.phoneHref}`} dir="ltr">{c.phoneDisplay}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="whatsapp" />{d.whatsapp}</dt>
+          <dd><a href={whatsappLink(d.whatsappMessage)} target="_blank" rel="noopener">{d.whatsappText}<span class="sr-only"> {all.a11y.newTab}</span></a></dd>
+        </div>
+        {c.email && (
+          <div>
+            <dt><Icon name="mail" />{d.email}</dt>
+            <dd><a href={`mailto:${c.email}`}>{c.email}</a></dd>
+          </div>
+        )}
+        <div>
+          <dt><Icon name="pin" />{d.address}</dt>
+          <dd><address>{c.address[lang]}</address></dd>
+        </div>
+        <div>
+          <dt><Icon name="clock" />{d.hours}</dt>
+          <dd>
+            <ul class="hours">
+              {c.hours.map((h) => <li><span>{h.days[lang]}</span><span>{h.time[lang]}</span></li>)}
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Carte légère : un plan dessiné qui ouvre Google Maps (pas d'iframe) -->
+    <a class="map" href={c.mapsUrl} target="_blank" rel="noopener" data-reveal style="--reveal-delay: 120ms">
+      <svg viewBox="0 0 480 400" role="img" aria-label={d.mapAlt} preserveAspectRatio="xMidYMid slice">
+        <rect width="480" height="400" fill="#F7F0E6" />
+        <g fill="none" stroke="#E0D2BC" stroke-width="14" stroke-linecap="round">
+          <path d="M-20 120C80 110 150 160 240 150S400 90 500 110" />
+          <path d="M120 -20C130 80 110 160 150 240S170 360 160 420" />
+          <path d="M-20 300C90 290 200 320 300 290S420 250 500 270" />
+          <path d="M340 -20C320 60 350 150 330 220S350 340 380 420" />
+        </g>
+        <g fill="none" stroke="#E9DDCA" stroke-width="6" stroke-linecap="round">
+          <path d="M40 200 220 210 300 190 460 200" />
+          <path d="M240 20 250 140 230 260 250 380" />
+          <path d="M20 40C80 60 120 40 200 60" />
+          <path d="M380 330C420 320 440 340 470 330" />
+        </g>
+        <path d="M-10 360C60 340 120 380 200 370" fill="none" stroke="#C9D3E0" stroke-width="18" stroke-linecap="round" opacity=".7" />
+        <g transform="translate(240 200)">
+          <ellipse cx="0" cy="34" rx="26" ry="7" fill="#1C3F6E" opacity=".15" />
+          <path d="M0 34S-30 4-30-16a30 30 0 0 1 60 0C30 4 0 34 0 34Z" fill="#1C3F6E" />
+          <path d="M0-30s-9 10.8-9 16.5a9 9 0 0 0 18 0C9-19.2 0-30 0-30Z" fill="#F7F0E6" />
+        </g>
+      </svg>
+      <span class="map-cta"><Icon name="pin" />{d.mapCta}<Icon name="arrow" /><span class="sr-only"> {all.a11y.newTab}</span></span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .contact-grid { display: grid; gap: var(--space-xl); align-items: center; }
+  @media (min-width: 960px) { .contact-grid { grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 6rem); } }
+  .contact h2 { font-size: var(--step-4); }
+  .contact .lead { margin-block: var(--space-m) var(--space-l); }
+
+  .contact-list { display: grid; margin: 0; }
+  .contact-list > div { display: grid; gap: 0.25rem; padding-block: var(--space-s); border-block-start: 1px solid var(--line); }
+  @media (min-width: 560px) { .contact-list > div { grid-template-columns: 11rem 1fr; gap: var(--space-m); } }
+  .contact-list dt { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 600; color: var(--navy-deep); }
+  .contact-list dt :global(svg) { inline-size: 1.2rem; block-size: 1.2rem; color: var(--navy); flex: none; }
+  .contact-list dd { margin: 0; }
+  .contact-list a { font-weight: 500; color: var(--navy); text-decoration-color: rgb(28 63 110 / 0.4); }
+  @media (hover: hover) { .contact-list a:hover { text-decoration-color: currentColor; } }
+  .contact-list address { font-style: normal; }
+  .hours { list-style: none; display: grid; gap: 0.2rem; }
+  .hours li { display: flex; justify-content: space-between; gap: 1rem; max-inline-size: 20rem; }
+  .hours li span:last-child { color: var(--ink-soft); }
+
+  .map {
+    position: relative;
+    display: block;
+    aspect-ratio: 6 / 5;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-paper);
+    text-decoration: none;
+  }
+  .map svg { inline-size: 100%; block-size: 100%; transition: transform 0.8s var(--ease-out); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .map:hover svg { transform: scale(1.04); } }
+  .map-cta {
+    position: absolute;
+    inset-inline: var(--space-s);
+    inset-block-end: var(--space-s);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--navy-deep);
+    color: var(--milk);
+    border-radius: var(--radius-s);
+    font-weight: 600;
+  }
+  .map-cta :global(svg) { inline-size: 1.2rem; block-size: 1.2rem; flex: none; }
+  .map-cta :global(.icon-arrow) { margin-inline-start: auto; transition: transform 0.3s var(--ease-out); }
+  @media (hover: hover) { .map:hover .map-cta :global(.icon-arrow) { transform: translateX(4px); } [dir='rtl'] .map:hover .map-cta :global(.icon-arrow) { transform: scaleX(-1) translateX(4px); } }
+  .map:focus-visible { outline-offset: 4px; }
+</style>

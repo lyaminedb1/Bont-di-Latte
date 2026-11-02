@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.netlify/
+.DS_Store
+*.log
+# Les vidéos sources peuvent être lourdes : on ne publie que les versions compressées (public/video)
+assets/video/*.mov

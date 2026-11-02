@@ -1,0 +1,173 @@
+---
+import { t, type Lang } from '../i18n';
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang).promise;
+const ingredients = site.ingredients[lang];
+const without = site.without[lang];
+const sep = lang === 'ar' ? '، ' : ', ';
+---
+
+<section id="promesse" class="section promise" aria-labelledby="promise-title">
+  <div class="container promise-grid">
+    <div class="promise-text">
+      <p class="kicker" data-reveal>{d.kicker}</p>
+      <h2 id="promise-title" data-reveal>{d.titleBefore}<em>{d.titleEm}</em>{d.titleAfter}</h2>
+      <p class="lead" data-reveal>{d.lead}</p>
+      <ul class="promise-points">
+        {d.points.map((p, i) => (
+          <li data-reveal style={`--reveal-delay:${i * 90}ms`}>
+            <Icon name="check" />
+            <div><strong>{p.title}</strong><span>{p.text}</span></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- L'étiquette retournée : le dos du paquet -->
+    <figure class="label" data-reveal style="--reveal-delay: 120ms">
+      <div class="label-top">
+        <span class="label-brand" lang="it">Bontà <em>di</em> Latte</span>
+        <span class="label-stamp">{d.label.stamp}</span>
+      </div>
+      <p class="label-product">{d.label.product}</p>
+
+      <div class="label-block">
+        <h3 class="label-heading">{d.label.heading}</h3>
+        <p class="label-ingredients">{ingredients.join(sep)}.</p>
+      </div>
+
+      <div class="label-block">
+        <h3 class="label-heading">{d.label.withoutHeading}</h3>
+        <ul class="label-without">
+          {without.map((w) => (
+            <li><span class="sr-only">{d.label.withoutSr}</span><s>{w}</s></li>
+          ))}
+        </ul>
+      </div>
+
+      <dl class="label-meta">
+        <div><dt>{d.label.storageLabel}</dt><dd>{site.storage[lang]}</dd></div>
+        <div><dt>{d.label.originLabel}</dt><dd>{d.label.origin}</dd></div>
+      </dl>
+
+      <div class="label-foot" aria-hidden="true">
+        <span class="barcode"></span>
+        <span class="tricolore"><span></span><span></span><span></span></span>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .promise-grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .promise-grid { grid-template-columns: 1.1fr 1fr; gap: clamp(3rem, 6vw, 7rem); }
+  }
+  .promise h2 { font-size: var(--step-4); }
+  .promise .lead { margin-block: var(--space-m) var(--space-l); }
+
+  .promise-points { display: grid; gap: var(--space-m); list-style: none; }
+  .promise-points li { display: flex; gap: 0.9rem; align-items: flex-start; }
+  .promise-points :global(svg) {
+    flex: none;
+    inline-size: 2rem; block-size: 2rem;
+    padding: 0.35rem;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--milk);
+    stroke-width: 2.2;
+  }
+  .promise-points strong { display: block; font-weight: 600; color: var(--navy-deep); }
+  .promise-points span { color: var(--ink-soft); }
+
+  /* ---------- Étiquette ---------- */
+  .label {
+    position: relative;
+    margin: 0;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: #fbf7f0;
+    border: 1px solid var(--line);
+    border-radius: 0.375rem;
+    box-shadow: var(--shadow-paper);
+    color: var(--ink);
+    font-feature-settings: 'tnum';
+  }
+  /* Petit angle « paquet retourné » ; annulé dans les animations réduites */
+  @media (min-width: 960px) and (prefers-reduced-motion: no-preference) {
+    .label { rotate: -1.5deg; transition: rotate 0.6s var(--ease-out); }
+    [dir='rtl'] .label { rotate: 1.5deg; }
+    .label:hover { rotate: 0deg; }
+  }
+  .label::before {
+    /* double filet intérieur, comme une étiquette imprimée */
+    content: '';
+    position: absolute;
+    inset: 0.5rem;
+    border: 1px dashed rgb(110 94 80 / 0.35);
+    border-radius: 0.2rem;
+    pointer-events: none;
+  }
+  .label-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .label-brand { font-family: 'Bodoni Moda', Georgia, serif; font-size: var(--step-2); font-weight: 600; color: var(--navy); line-height: 1.1; }
+  .label-brand em { font-weight: 500; }
+  .label-stamp {
+    padding: 0.3rem 0.7rem;
+    border: 1.5px solid var(--green);
+    border-radius: 999px;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  :lang(ar) .label-stamp { letter-spacing: 0; }
+  .label-product {
+    margin-block: 0.4rem 0;
+    padding-block-end: var(--space-m);
+    border-block-end: 2px solid var(--ink);
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  :lang(ar) .label-product { letter-spacing: 0; font-size: var(--step-0); }
+  .label-block { padding-block: var(--space-m); border-block-end: 1px solid var(--line); }
+  .label-heading {
+    margin-block-end: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+  :lang(ar) .label-heading { letter-spacing: 0; font-size: var(--step-0); }
+  .label-ingredients { font-size: var(--step-1); font-weight: 500; line-height: 1.5; }
+  .label-without { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; list-style: none; }
+  .label-without s {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    text-decoration-line: line-through;
+    text-decoration-color: var(--red);
+    text-decoration-thickness: 2px;
+  }
+  .label-meta { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); margin: 0; padding-block: var(--space-m) var(--space-s); }
+  .label-meta dt { font-size: var(--step--1); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  :lang(ar) .label-meta dt { letter-spacing: 0; }
+  .label-meta dd { margin: 0.2rem 0 0; color: var(--ink-soft); }
+  .label-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-block-start: var(--space-s); }
+  .barcode {
+    inline-size: 7.5rem;
+    block-size: 2.5rem;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px, var(--ink) 8px 11px, transparent 11px 12px);
+    opacity: 0.8;
+  }
+  .label-foot .tricolore { inline-size: 4.5rem; block-size: 3px; box-shadow: 0 0 0 0.5px var(--line); }
+</style>

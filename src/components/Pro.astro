@@ -1,0 +1,159 @@
+---
+import { t, localePath, type Lang } from '../i18n';
+import { whatsappLink } from '../config/site';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const all = t(lang);
+const d = all.pro;
+const f = d.form;
+// Valeurs envoyées identiques en FR et en AR (plus simple à trier dans Netlify) : on garde le libellé FR.
+const fr = t('fr').pro.form;
+---
+
+<section id="professionnels" class="section section--navy pro on-dark" aria-labelledby="pro-title">
+  <div class="tricolore pro-filet" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="container pro-grid">
+    <div class="pro-text">
+      <p class="kicker" data-reveal>{d.kicker}</p>
+      <h2 id="pro-title" data-reveal>{d.titleBefore}<em>{d.titleEm}</em>{d.titleAfter}</h2>
+      <p class="lead" data-reveal>{d.lead}</p>
+      <ul class="pro-args">
+        {d.args.map((a, i) => (
+          <li data-reveal style={`--reveal-delay:${i * 70}ms`}>
+            <span class="pro-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div><strong>{a.title}</strong><span>{a.text}</span></div>
+          </li>
+        ))}
+      </ul>
+      <a class="btn btn--green" href={whatsappLink(d.whatsappMessage)} target="_blank" rel="noopener" data-reveal>
+        <Icon name="whatsapp" />{d.whatsappCta}<span class="sr-only"> {all.a11y.newTab}</span>
+      </a>
+    </div>
+
+    <div class="pro-form-wrap" data-reveal style="--reveal-delay: 120ms">
+      <form class="pro-form" name="demande-tarif" method="POST" action={localePath(lang, 'merci/')}
+        data-netlify="true" netlify-honeypot="bot-field" aria-labelledby="form-title" aria-describedby="form-intro">
+        <input type="hidden" name="form-name" value="demande-tarif" />
+        <input type="hidden" name="langue" value={lang} />
+        <p class="honeypot" aria-hidden="true">
+          <label>{f.honeypot} <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <h3 id="form-title">{f.title}</h3>
+        <p id="form-intro" class="form-intro">{f.intro}</p>
+
+        <div class="field">
+          <label for={`nom-${lang}`}>{f.name} <span class="req" aria-hidden="true">*</span></label>
+          <input id={`nom-${lang}`} name="nom" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for={`etab-${lang}`}>{f.business} <span class="req" aria-hidden="true">*</span></label>
+          <input id={`etab-${lang}`} name="etablissement" type="text" autocomplete="organization" required />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for={`type-${lang}`}>{f.type} <span class="req" aria-hidden="true">*</span></label>
+            <select id={`type-${lang}`} name="type" required>
+              <option value="">{f.choose}</option>
+              {f.typeOptions.map((o, i) => <option value={fr.typeOptions[i]}>{o}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for={`ville-${lang}`}>{f.city} <span class="req" aria-hidden="true">*</span></label>
+            <input id={`ville-${lang}`} name="ville" type="text" autocomplete="address-level2" required />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for={`tel-${lang}`}>{f.phone} <span class="req" aria-hidden="true">*</span></label>
+            <input id={`tel-${lang}`} name="telephone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr"
+              pattern="[0-9 +().\-]{8,}" required aria-describedby={`tel-hint-${lang}`} />
+            <small id={`tel-hint-${lang}`}>{f.phoneHint}</small>
+          </div>
+          <div class="field">
+            <label for={`vol-${lang}`}>{f.volume}</label>
+            <select id={`vol-${lang}`} name="volume">
+              <option value="">{f.choose}</option>
+              {f.volumeOptions.map((o, i) => <option value={fr.volumeOptions[i]}>{o}</option>)}
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for={`msg-${lang}`}>{f.message}</label>
+          <textarea id={`msg-${lang}`} name="message" rows="3" placeholder={f.messagePlaceholder}></textarea>
+        </div>
+
+        <button class="btn btn--milk form-submit" type="submit">{f.submit}<Icon name="arrow" /></button>
+        <p class="form-privacy">{f.privacy}</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pro { overflow: hidden; }
+  .pro-filet { position: absolute; inset-block-start: 0; inset-inline: 0; }
+  .pro-grid { display: grid; gap: var(--space-xl); align-items: start; }
+  @media (min-width: 1024px) { .pro-grid { grid-template-columns: 1fr minmax(26rem, 30rem); gap: clamp(3rem, 6vw, 6rem); } }
+
+  .pro h2 { font-size: var(--step-4); }
+  .pro .lead { margin-block: var(--space-m) var(--space-l); }
+  .pro-args { display: grid; gap: var(--space-m); margin-block-end: var(--space-l); list-style: none; }
+  @media (min-width: 640px) { .pro-args { grid-template-columns: 1fr 1fr; gap: var(--space-l) var(--space-m); } }
+  .pro-args li { display: flex; gap: 0.9rem; padding-block-start: var(--space-s); border-block-start: 1px solid var(--line-dark); }
+  .pro-num { font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; font-size: var(--step-1); color: var(--mist); line-height: 1.4; }
+  .pro-args strong { display: block; color: var(--milk); font-weight: 600; }
+  .pro-args span:not(.pro-num) { color: var(--mist); }
+
+  .pro-form-wrap {
+    padding: clamp(1.25rem, 4vw, 2.25rem);
+    background: var(--navy);
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius);
+  }
+  .pro-form { display: grid; gap: var(--space-s); }
+  .pro-form h3 { font-size: var(--step-2); }
+  .form-intro { margin: 0 0 0.25rem; font-size: var(--step--1); color: var(--mist); }
+  :lang(ar) .form-intro { font-size: var(--step-0); }
+  .field { display: grid; gap: 0.35rem; min-inline-size: 0; }
+  .field-row { display: grid; gap: var(--space-s); }
+  @media (min-width: 520px) { .field-row { grid-template-columns: 1fr 1fr; } }
+  .field label { font-size: 0.9rem; font-weight: 500; color: var(--milk); }
+  :lang(ar) .field label { font-size: 1rem; }
+  .req { color: var(--milk); }
+  .field small { font-size: 0.8rem; color: var(--mist); }
+  :lang(ar) .field small { font-size: 0.9rem; }
+  .field :is(input, select, textarea) {
+    inline-size: 100%;
+    min-block-size: 3rem;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-s);
+    background: var(--milk);
+    color: var(--ink);
+    font-size: 1rem; /* 16 px : évite le zoom automatique sur iOS */
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input[dir='ltr'] { text-align: start; }
+  [dir='rtl'] .field input[dir='ltr'] { text-align: end; }
+  .field textarea { resize: vertical; min-block-size: 5.5rem; }
+  .field select {
+    appearance: none;
+    padding-inline-end: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231c3f6e' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 1.1rem;
+    background-position: right 0.9rem center;
+  }
+  [dir='rtl'] .field select { background-position: left 0.9rem center; }
+  .field ::placeholder { color: var(--ink-soft); opacity: 1; }
+  .field :is(input, select, textarea):focus-visible { outline: 3px solid var(--milk); outline-offset: 2px; border-color: var(--navy); }
+  .field :is(input, select, textarea):user-invalid { border-color: var(--red); box-shadow: 0 0 0 3px rgb(200 50 43 / 0.35); }
+
+  .form-submit { justify-self: start; margin-block-start: 0.5rem; }
+  @media (max-width: 519.98px) { .form-submit { inline-size: 100%; } }
+  .form-privacy { margin: 0; font-size: 0.8rem; color: var(--mist); }
+  :lang(ar) .form-privacy { font-size: 0.9rem; }
+  .honeypot { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>

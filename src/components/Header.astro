@@ -1,0 +1,133 @@
+---
+import { t, localePath, type Lang } from '../i18n';
+interface Props { lang: Lang; simple?: boolean }
+const { lang, simple = false } = Astro.props;
+const d = t(lang);
+const home = localePath(lang);
+const links = [
+  ['#promesse', d.nav.promise],
+  ['#savoir-faire', d.nav.craft],
+  ['#mozzarellas', d.nav.products],
+  ['#professionnels', d.nav.pro],
+  ['#contact', d.nav.contact],
+] as const;
+---
+
+<header class="site-header" data-header data-state={simple ? 'solid' : 'over'}>
+  <div class="container header-inner">
+    <a class="brand" href={home} aria-label={d.a11y.home}>
+      <img src="/img/symbole-96.webp" width="40" height="40" alt="" />
+      <span class="brand-name" lang="it" aria-hidden="true">Bontà <em>di</em> Latte</span>
+    </a>
+
+    {!simple && (
+      <nav class="main-nav" aria-label={d.a11y.mainNav}>
+        <ul>
+          {links.map(([href, label]) => (
+            <li><a href={href}>{label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <div class="header-actions">
+      <a class="lang-switch" href={d.switcher.otherHref} hreflang={d.switcher.otherLang} lang={d.switcher.otherLang}
+        title={d.a11y.langSwitch}>
+        {d.switcher.otherLabel}
+      </a>
+      {!simple && (
+        <a class="btn btn--small header-cta" href="#professionnels">
+          <span class="cta-long">{d.nav.cta}</span><span class="cta-short">{d.nav.ctaShort}</span>
+        </a>
+      )}
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-start: 0;
+    z-index: 50;
+    block-size: var(--header-h);
+    color: var(--milk);
+    transition: background-color 0.35s var(--ease-out), color 0.35s, box-shadow 0.35s, transform 0.35s var(--ease-out);
+  }
+  .site-header[data-state='solid'] {
+    background: rgb(247 240 230 / 0.94);
+    color: var(--navy-deep);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header[data-state='solid'] { background: rgb(247 240 230 / 0.82); backdrop-filter: saturate(1.4) blur(14px); }
+  }
+  .header-inner { display: flex; align-items: center; gap: var(--space-m); block-size: 100%; }
+
+  .brand { display: inline-flex; align-items: center; gap: 0.65rem; text-decoration: none; flex: none; border-radius: 999px; }
+  .brand img { inline-size: 2.5rem; block-size: 2.5rem; }
+  .brand-name { font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+  .brand-name em { font-weight: 500; }
+
+  .main-nav { margin-inline-start: auto; }
+  .main-nav ul { display: flex; gap: clamp(1rem, 2vw, 2rem); list-style: none; }
+  .main-nav a {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .main-nav a::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: var(--origin, left);
+    transition: transform 0.35s var(--ease-out);
+  }
+  [dir='rtl'] .main-nav a::after { --origin: right; }
+  @media (hover: hover) { .main-nav a:hover::after { transform: scaleX(1); } }
+  .main-nav a[aria-current='true']::after { transform: scaleX(1); }
+
+  .header-actions { display: flex; align-items: center; gap: 0.75rem; margin-inline-start: auto; }
+  .main-nav + .header-actions { margin-inline-start: var(--space-s); }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.6rem;
+    padding: 0.35rem 0.95rem;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .lang-switch:lang(ar) { font-family: var(--font-arabic); font-size: 1.05rem; }
+  .lang-switch:lang(fr) { font-family: 'Work Sans', system-ui, sans-serif; }
+  @media (hover: hover) {
+    .site-header[data-state='over'] .lang-switch:hover { background: var(--milk); color: var(--navy-deep); }
+    .site-header[data-state='solid'] .lang-switch:hover { background: var(--navy); color: var(--milk); }
+  }
+
+  .site-header[data-state='over'] .header-cta { --btn-bg: var(--milk); --btn-fg: var(--navy-deep); --btn-border: var(--milk); }
+  .site-header[data-state='over'] :focus-visible { outline-color: var(--milk); }
+
+  .cta-short { display: none; }
+
+  @media (max-width: 1080px) {
+    .main-nav { display: none; }
+  }
+  @media (max-width: 640px) {
+    .brand-name { display: none; }
+    .cta-long { display: none; }
+    .cta-short { display: inline; }
+    .header-actions { gap: 0.5rem; }
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+import { t, type Lang } from '../i18n';
+import { site, whatsappLink } from '../config/site';
+import { findVideo } from '../lib/media';
+import ProductArt from './ProductArt.astro';
+import LazyVideo from './LazyVideo.astro';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const all = t(lang);
+const d = all.products;
+const video = findVideo('produit');
+---
+
+<section id="mozzarellas" class="section products" aria-labelledby="products-title">
+  <div class="container">
+    <div class:list={['products-head', { 'has-video': video }]}>
+      <div class="section-head">
+        <p class="kicker" data-reveal>{d.kicker}</p>
+        <h2 id="products-title" data-reveal>{d.titleBefore}<em>{d.titleEm}</em>{d.titleAfter}</h2>
+        <p class="lead" data-reveal>{d.lead}</p>
+      </div>
+      {video && <div class="products-video" data-reveal><LazyVideo video={video} label={d.videoLabel} ratio="16 / 10" /></div>}
+    </div>
+
+    <ul class="product-list">
+      {site.products.map((p, i) => {
+        const copy = d.items[p.id as keyof typeof d.items];
+        return (
+          <li class="product" data-reveal style={`--reveal-delay:${i * 100}ms`}>
+            <div class="product-visual">
+              {p.photo
+                ? <img src={p.photo} alt={copy.alt} width="1200" height="900" loading="lazy" decoding="async" />
+                : <ProductArt kind={p.illustration} label={copy.alt} />}
+            </div>
+            <div class="product-body">
+              <p class="product-tagline">{copy.tagline}</p>
+              <h3 lang="it">{p.name}</h3>
+              <p class="product-text">{copy.text}</p>
+              <dl class="product-meta">
+                <div>
+                  <dt>{d.formatsLabel}</dt>
+                  <dd>{p.formats[lang].join(' · ')}</dd>
+                </div>
+                <div>
+                  <dt>{d.forLabel}</dt>
+                  <dd>{copy.audience}</dd>
+                </div>
+              </dl>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="taste" data-reveal>
+      <div>
+        <h3>{d.tasteTitle}</h3>
+        <p>{d.tasteText}</p>
+      </div>
+      <a class="btn btn--green" href={whatsappLink(d.tasteMessage)} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />{d.tasteCta}<span class="sr-only"> {all.a11y.newTab}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .products-head.has-video { display: grid; gap: var(--space-l); margin-block-end: var(--space-xl); }
+  .products-head.has-video .section-head { margin-block-end: 0; }
+  @media (min-width: 960px) {
+    .products-head.has-video { grid-template-columns: 1fr 1fr; align-items: end; }
+  }
+
+  .product-list { display: grid; gap: var(--space-xl) var(--space-l); list-style: none; }
+  @media (min-width: 720px) and (max-width: 1023.98px) {
+    .product-list { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1024px) {
+    .product-list { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .product { display: flex; flex-direction: column; gap: var(--space-m); }
+  .product-visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    padding: var(--space-m);
+    background: var(--cream);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .product-visual :is(img, svg) { transition: transform 0.6s var(--ease-out); }
+  .product-visual img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .product:hover .product-visual :is(img, svg) { transform: scale(1.04) translateY(-4px); }
+  }
+
+  .product-tagline {
+    margin: 0;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  :lang(ar) .product-tagline { letter-spacing: 0; font-size: var(--step-0); }
+  .product h3 { margin-block: 0.25rem 0.6rem; font-family: 'Bodoni Moda', Georgia, serif; font-size: var(--step-3); font-style: italic; font-weight: 500; color: var(--navy); line-height: 1.1; }
+  .product-text { color: var(--ink-soft); }
+  .product-meta { display: grid; gap: 0.6rem; margin: var(--space-m) 0 0; padding-block-start: var(--space-s); border-block-start: 1px solid var(--line); }
+  .product-meta div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.75rem; }
+  .product-meta dt { font-size: var(--step--1); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding-block-start: 0.15em; }
+  :lang(ar) .product-meta dt { letter-spacing: 0; font-size: var(--step-0); padding: 0; }
+  .product-meta dd { margin: 0; }
+
+  .taste {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-l);
+    border-block-start: 1px solid var(--line);
+  }
+  .taste h3 { font-size: var(--step-2); color: var(--navy-deep); margin-block-end: 0.3rem; }
+  .taste p { color: var(--ink-soft); }
+</style>

@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Promise from './Promise.astro';
+import Craft from './Craft.astro';
+import Products from './Products.astro';
+import Pro from './Pro.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import WhatsAppFab from './WhatsAppFab.astro';
+import { t, type Lang } from '../i18n';
+import { findVideo } from '../lib/media';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+// Précharge l'image du héros affichée en premier (poster vidéo ou logo)
+const wide = findVideo('hero-16x9');
+const tall = findVideo('hero-9x16');
+---
+<Base lang={lang} title={d.meta.title} description={d.meta.description}>
+  <Fragment slot="head">
+    {(wide?.poster || tall?.poster) ? (
+      <>
+        {tall?.poster && <link rel="preload" as="image" href={tall.poster} media="(max-aspect-ratio: 4/5)" fetchpriority="high" />}
+        {wide?.poster && <link rel="preload" as="image" href={wide.poster} media={tall?.poster ? '(min-aspect-ratio: 801/1000)' : undefined} fetchpriority="high" />}
+      </>
+    ) : (
+      <link rel="preload" as="image" href="/img/logo-ovale-960.webp" imagesrcset="/img/logo-ovale-480.webp 480w, /img/logo-ovale-960.webp 960w" imagesizes="(max-width: 640px) 80vw, 34rem" fetchpriority="high" />
+    )}
+  </Fragment>
+  <Header lang={lang} />
+  <main id="contenu" tabindex="-1">
+    <Hero lang={lang} />
+    <Promise lang={lang} />
+    <Craft lang={lang} />
+    <Products lang={lang} />
+    <Pro lang={lang} />
+    <Contact lang={lang} />
+  </main>
+  <Footer lang={lang} />
+  <WhatsAppFab lang={lang} />
+</Base>

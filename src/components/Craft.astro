@@ -1,0 +1,181 @@
+---
+import { t, type Lang } from '../i18n';
+import { findVideo } from '../lib/media';
+import LazyVideo from './LazyVideo.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang).craft;
+const video = findVideo('filage');
+const nums = lang === 'ar' ? ['٠١', '٠٢', '٠٣', '٠٤'] : ['01', '02', '03', '04'];
+---
+
+<section id="savoir-faire" class="craft section--cream" aria-labelledby="craft-title" data-craft>
+  <div class="craft-sticky">
+    <div class="craft-track" data-craft-track>
+      <div class="craft-intro">
+        <p class="kicker" data-reveal>{d.kicker}</p>
+        <h2 id="craft-title" data-reveal>{d.titleBefore}<em>{d.titleEm}</em>{d.titleAfter}</h2>
+        <p class="lead" data-reveal>{d.lead}</p>
+        <p class="craft-hint" aria-hidden="true"><span></span>{d.hint}</p>
+      </div>
+
+      {video && (
+        <div class="craft-video" data-reveal>
+          <LazyVideo video={video} label={d.videoLabel} />
+        </div>
+      )}
+
+      <ol class="craft-steps">
+        {d.steps.map((s, i) => (
+          <li class="step" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+            <div class="step-rail" aria-hidden="true"><span class="step-drop"></span></div>
+            <span class="step-num" aria-hidden="true">{nums[i]}</span>
+            <svg class="step-art" viewBox="0 0 96 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              {i === 0 && (<>
+                <path d="M34 22h28v8c0 4 8 8 8 18v30a6 6 0 0 1-6 6H32a6 6 0 0 1-6-6V48c0-10 8-14 8-18Z" />
+                <path d="M32 16h32v6H32z" /><path d="M26 56c10 4 34 4 44 0" />
+                <path d="M48 62c0 0-5 6-5 9a5 5 0 0 0 10 0c0-3-5-9-5-9Z" fill="currentColor" stroke="none" opacity=".18" />
+              </>)}
+              {i === 1 && (<>
+                <ellipse cx="48" cy="40" rx="34" ry="9" /><path d="M14 40v28c0 5 15 9 34 9s34-4 34-9V40" />
+                <path d="M30 52l8 4 9-5 9 4 9-4M28 63l9 3 10-4 9 4 10-3" opacity=".7" />
+                <path d="M68 12 52 36" /><path d="M66 10l6 4" />
+              </>)}
+              {i === 2 && (<>
+                <path d="M18 36c8-6 14-6 20 0s12 6 20 0 14-6 20 0" />
+                <path d="M22 50c10 16 42 16 52 0" />
+                <path d="M30 44c4 4 8 6 18 6s14-2 18-6" opacity=".6" />
+                <path d="M24 24l6 6M72 24l-6 6M48 14v10" />
+                <path d="M16 74c10 4 54 4 64 0" opacity=".5" />
+              </>)}
+              {i === 3 && (<>
+                <rect x="16" y="30" width="64" height="44" rx="5" /><path d="M16 42h64" />
+                <path d="M48 50v16M41 54l14 8M41 62l14-8" />
+                <circle cx="36" cy="38" r="2.4" fill="currentColor" stroke="none" /><circle cx="48" cy="36" r="2.4" fill="currentColor" stroke="none" /><circle cx="60" cy="38" r="2.4" fill="currentColor" stroke="none" />
+              </>)}
+            </svg>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="craft-progress" aria-hidden="true"><span data-craft-bar></span></div>
+  </div>
+</section>
+
+<style>
+  .craft { position: relative; background: var(--cream); }
+  .craft-sticky { padding-block: var(--space-2xl); }
+  .craft-track {
+    display: grid;
+    gap: var(--space-xl);
+    max-inline-size: calc(var(--max) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .craft h2 { font-size: var(--step-4); }
+  .craft .lead { margin-block-start: var(--space-m); }
+  .craft-hint { display: none; }
+
+  .craft-video { max-inline-size: 26rem; }
+
+  .craft-steps { display: grid; gap: var(--space-l); list-style: none; counter-reset: step; }
+  .step { position: relative; padding-inline-start: 2.75rem; }
+  .step-rail { position: absolute; inset-block: 0 calc(-1 * var(--space-l)); inset-inline-start: 0.6rem; inline-size: 1px; background: var(--line); }
+  .step:last-child .step-rail { inset-block-end: 0; background: linear-gradient(var(--line), transparent); }
+  .step-drop {
+    position: absolute;
+    inset-block-start: 0.35rem;
+    inset-inline-start: -0.45rem;
+    inline-size: 0.95rem;
+    block-size: 1.25rem;
+    background: var(--navy);
+    -webkit-mask: var(--drop-mask) center / contain no-repeat;
+    mask: var(--drop-mask) center / contain no-repeat;
+  }
+  .step-num {
+    display: block;
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-style: italic;
+    font-size: var(--step-3);
+    line-height: 1;
+    color: var(--navy);
+  }
+  :lang(ar) .step-num { font-family: var(--font-arabic); font-style: normal; font-weight: 700; }
+  .step-art { inline-size: 4.5rem; block-size: 4.5rem; margin-block: var(--space-s); color: var(--navy); }
+  .step h3 { font-size: var(--step-2); margin-block-end: 0.5rem; color: var(--navy-deep); }
+  .step p { color: var(--ink-soft); max-inline-size: 30rem; }
+  .craft-progress { display: none; }
+
+  @media (min-width: 720px) and (max-width: 1023.98px) {
+    .craft-steps { grid-template-columns: 1fr 1fr; gap: var(--space-xl) var(--space-l); }
+    .step-rail { display: none; }
+    .step { padding-inline-start: 0; padding-block-start: var(--space-m); border-block-start: 1px solid var(--line); }
+  }
+
+  /* ---------- Ordinateur : défilement horizontal piloté par le défilement vertical ---------- */
+  @media (min-width: 1024px) {
+    .craft-steps { display: flex; flex: none; gap: clamp(2.5rem, 4vw, 4.5rem); }
+    .craft-track { display: flex; align-items: center; gap: clamp(2.5rem, 4vw, 4.5rem); max-inline-size: none; }
+    .craft-intro { flex: 0 0 min(34rem, 40vw); }
+    .craft-video { flex: 0 0 auto; inline-size: min(22rem, 26vw); }
+    .step { flex: 0 0 clamp(17rem, 22vw, 21rem); padding-inline-start: 0; padding-block-start: 3rem; }
+    .step-rail {
+      inset-block: 0.55rem auto;
+      inset-inline: 0 calc(-1 * clamp(2.5rem, 4vw, 4.5rem));
+      inline-size: auto;
+      block-size: 1px;
+    }
+    .step:last-child .step-rail { inset-inline-end: 0; background: linear-gradient(to var(--rail-end, right), var(--line), transparent); }
+    [dir='rtl'] .step:last-child .step-rail { --rail-end: left; }
+    .step-drop { inset-block-start: -0.55rem; inset-inline-start: 0; }
+
+    /* Activé par le script : la section devient haute et le contenu reste collé à l'écran */
+    .craft[data-pinned] { block-size: var(--craft-h, 300vh); }
+    .craft[data-pinned] .craft-sticky {
+      position: sticky;
+      inset-block-start: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      block-size: 100vh;
+      block-size: 100svh;
+      padding-block: calc(var(--header-h) + 1rem) var(--space-l);
+      overflow: hidden;
+    }
+    .craft[data-pinned] .craft-track { transform: translate3d(var(--craft-x, 0px), 0, 0); will-change: transform; inline-size: max-content; margin-inline: 0; }
+    .craft[data-pinned] .craft-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-block-start: var(--space-l);
+      font-size: var(--step--1);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    :lang(ar) .craft[data-pinned] .craft-hint { letter-spacing: 0; font-size: var(--step-0); }
+    .craft-hint span { inline-size: 3rem; block-size: 1px; background: currentColor; }
+    .craft[data-pinned] .craft-progress {
+      display: block;
+      align-self: center;
+      inline-size: min(18rem, 40vw);
+      block-size: 2px;
+      margin-block-start: var(--space-xl);
+      background: var(--line);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .craft-progress span {
+      display: block;
+      block-size: 100%;
+      background: var(--navy);
+      transform-origin: var(--origin, left);
+      transform: scaleX(var(--craft-p, 0));
+    }
+    [dir='rtl'] .craft-progress span { --origin: right; }
+    .craft[data-pinned] [data-reveal] { opacity: 1; transform: none; }
+  }
+</style>
