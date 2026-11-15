@@ -123,7 +123,9 @@ Générés automatiquement à chaque build : `sitemap-index.xml` (avec hreflang 
 
 ```
 assets/
-  img/logo-ovale.webp, symbole.png   logos fournis (sources, ne pas modifier)
+  img/logo-ovale-original.jpg        logo fourni (source, ne pas modifier)
+  img/logo-ovale.png                 logo détouré (fond transparent)
+  img/symbole.png                    symbole rond tiré de l'emblème du logo
   img/og-image.png                   image de partage 1200×630 (générée)
   video/                             vidéos sources Higgsfield
 public/
@@ -145,7 +147,19 @@ src/
   scripts/main.ts                    menu, carrousels, recherche, apparitions, vidéos
 ```
 
-Si les logos changent, remplacez `assets/img/logo-ovale.webp` et `assets/img/symbole.png` par des versions de même cadrage (fond transparent), puis lancez :
+Si le logo change, remplacez `assets/img/logo-ovale-original.jpg`, puis lancez dans l'ordre les trois commandes ci-dessous. Elles détourent le fond blanc, refont le symbole rond (favicon), puis régénèrent les déclinaisons web, les favicons et l'image Open Graph.
+
+```bash
+python3 scripts/cutout-logo.py assets/img/logo-ovale-original.jpg assets/img/logo-ovale.png
+```
+
+```bash
+python3 scripts/make-symbol.py assets/img/logo-ovale.png assets/img/symbole.png
+```
+
+```bash
+npm run images
+```
 
 ```bash
 npm run images

@@ -3,7 +3,7 @@
 import sharp from 'sharp';
 import { mkdir, copyFile } from 'node:fs/promises';
 
-const SRC_OVALE = 'assets/img/logo-ovale.webp';
+const SRC_OVALE = 'assets/img/logo-ovale.png'; // détouré depuis logo-ovale-original.jpg (scripts/cutout-logo.py)
 const SRC_SYMBOLE = 'assets/img/symbole.png';
 const OUT = 'public/img';
 const MILK = '#F7F0E6';
