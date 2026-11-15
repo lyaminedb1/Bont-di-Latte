@@ -1,4 +1,5 @@
 ---
+import Ribbon from '../components/Ribbon.astro';
 import Page from '../layouts/Page.astro';
 import PageBanner from '../components/PageBanner.astro';
 import RecipeCard from '../components/RecipeCard.astro';
@@ -51,7 +52,7 @@ const ld = {
   </div>
   {linked.length > 0 && (
     <section class="container section-tight" aria-labelledby="pd-rec">
-      <h2 id="pd-rec" class="brand-title">{p.recipes}</h2>
+      <div class="title-block"><h2 id="pd-rec" class="brand-title">{p.recipes}</h2><Ribbon /></div>
       <ul class="pd-recipes">{linked.map((r) => <li><RecipeCard lang={lang} recipe={r} /></li>)}</ul>
       <p style="text-align:center"><a class="text-link" href={localePath(lang, 'produits/')}>{p.back}</a></p>
     </section>

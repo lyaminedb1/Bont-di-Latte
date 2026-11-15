@@ -1,0 +1,20 @@
+---
+// Ruban vert-blanc-rouge ondulé, repris des rubans du logo. Décoratif.
+interface Props { class?: string; width?: string }
+const { class: cls, width = '8.5rem' } = Astro.props;
+const id = `rb-${Math.random().toString(36).slice(2, 8)}`;
+---
+<svg class:list={['ribbon', cls]} viewBox="0 0 120 22" style={`inline-size:${width}`} aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#1E7B4A" /><stop offset=".36" stop-color="#1E7B4A" />
+      <stop offset=".42" stop-color="#FFFFFF" /><stop offset=".6" stop-color="#FFFFFF" />
+      <stop offset=".66" stop-color="#C8322B" /><stop offset="1" stop-color="#C8322B" />
+    </linearGradient>
+  </defs>
+  <path d="M2 15C28 3 56 19 84 10S110 3 118 3C113 11 102 19 86 20 58 22 32 10 2 15Z" fill={`url(#${id})`} stroke="#0B2E6B" stroke-width=".7" stroke-linejoin="round" />
+</svg>
+<style>
+  .ribbon { display: block; block-size: auto; }
+  /* Pas de miroir en arabe : le vert reste à gauche, comme sur le logo */
+</style>

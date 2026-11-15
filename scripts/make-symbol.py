@@ -46,3 +46,13 @@ emblem = emblem.resize((ew, int(emblem.height * ew / emblem.width)), Image.LANCZ
 sym.alpha_composite(emblem, ((S - emblem.width) // 2, (S - emblem.height) // 2 - 10))
 sym.save(dst)
 print('ok', tuple(int(v) for v in navy), emblem.size)
+
+# Emblème seul (blanc sur transparent) : utilisé comme masque CSS (puces, filigranes)
+emb = Image.fromarray(np.dstack([np.full(whiteness.shape + (3,), 255, np.uint8), (whiteness * 255).astype(np.uint8)]), 'RGBA')
+emb = emb.crop(emb.getbbox())
+emb.resize((192, int(emb.height * 192 / emb.width)), Image.LANCZOS).save('public/img/emblem.png', optimize=True)
+# Filigrane très léger pour les grands panneaux bleus
+wm = emb.resize((480, int(emb.height * 480 / emb.width)), Image.LANCZOS)
+a = np.array(wm); a[..., 3] = (a[..., 3].astype(np.float32) * 0.07).astype(np.uint8)
+Image.fromarray(a, 'RGBA').save('public/img/emblem-watermark.png', optimize=True)
+print('emblème + filigrane générés')

@@ -1,4 +1,5 @@
 ---
+import Ribbon from './Ribbon.astro';
 import { localePath, type Lang } from '../i18n';
 import { ui } from '../i18n/ui';
 import { recipes } from '../data/catalog';
@@ -13,8 +14,8 @@ const u = ui[lang].recipesBlock;
   <div class="rb-media" data-reveal>
     <FoodArt kind="caprese" bg="cream" label={u.alt} />
   </div>
-  <div class="rb-panel on-navy" data-reveal style="--reveal-delay: 100ms">
-    <h2 id="rb-title" class="brand-title on-navy">{u.title}</h2>
+  <div class="rb-panel tex-navy on-navy" data-reveal style="--reveal-delay: 100ms">
+    <div class="title-block"><h2 id="rb-title" class="brand-title on-navy">{u.title}</h2><Ribbon /></div>
     <Carousel lang={lang} label={u.title} item="min(80%, 15.5rem)">
       {recipes.map((r) => <li><RecipeCard lang={lang} recipe={r} /></li>)}
     </Carousel>
@@ -34,7 +35,6 @@ const u = ui[lang].recipesBlock;
     min-inline-size: 0;
     padding: var(--space-l) var(--space-m);
     border-radius: var(--radius-l);
-    background: var(--navy);
     color: var(--milk);
   }
   .rb-panel :global(.carousel) { inline-size: 100%; }

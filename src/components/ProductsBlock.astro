@@ -1,4 +1,5 @@
 ---
+import Ribbon from './Ribbon.astro';
 import { localePath, type Lang } from '../i18n';
 import { ui } from '../i18n/ui';
 import { site } from '../config/site';
@@ -9,7 +10,7 @@ const { lang } = Astro.props;
 const u = ui[lang].productsBlock;
 ---
 <section class="pb container section-tight" aria-labelledby="pb-title">
-  <h2 id="pb-title" class="brand-title" data-reveal>{u.title}</h2>
+  <div class="title-block" data-reveal><h2 id="pb-title" class="brand-title">{u.title}</h2><Ribbon /></div>
   <div data-reveal style="--reveal-delay: 100ms">
     <Carousel lang={lang} label={u.title} item="min(82%, 20rem)" gap="1.5rem" class="pb-carousel">
       {site.products.map((p) => <li><ProductCard lang={lang} id={p.id} /></li>)}

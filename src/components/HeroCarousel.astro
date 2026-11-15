@@ -1,4 +1,5 @@
 ---
+import Ribbon from './Ribbon.astro';
 import { t, localePath, type Lang } from '../i18n';
 import { ui } from '../i18n/ui';
 import HeroMedia from './HeroMedia.astro';
@@ -23,7 +24,8 @@ const n = u.slides.length;
             {i === 1 && <FoodArt kind="pizza" bg="navy" />}
             {i === 2 && <FoodArt kind="chakchouka" bg="cream" />}
           </div>
-          <div class="hc-panel on-dark">
+          <div class="hc-panel tex-navy on-dark">
+            <Ribbon width="6.5rem" />
             <p class="hc-kicker">{s.kicker}</p>
             <Heading class="hc-title">{s.titleBefore}<em>{s.titleEm}</em>{s.titleAfter}</Heading>
             <p class="hc-text">{s.text}</p>
@@ -63,7 +65,6 @@ const n = u.slides.length;
     justify-content: center;
     gap: var(--space-s);
     padding: var(--space-l) var(--gutter) calc(var(--space-l) + 1.75rem);
-    background: var(--navy);
     color: var(--milk);
     text-align: center;
   }

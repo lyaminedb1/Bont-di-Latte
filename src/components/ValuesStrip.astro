@@ -1,7 +1,6 @@
 ---
 import { localePath, type Lang } from '../i18n';
 import { ui } from '../i18n/ui';
-import Icon from './Icon.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const u = ui[lang].values;
@@ -11,7 +10,7 @@ const u = ui[lang].values;
     <ul class="values-list">
       {u.items.map((v, i) => (
         <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
-          <span class="values-icon" aria-hidden="true"><Icon name="drop" /></span>
+          <span class="values-icon" aria-hidden="true"><span class="emblem"></span></span>
           <strong lang={v.title.startsWith('Fatta') ? 'it' : undefined}>{v.title}</strong>
           <span>{v.text}</span>
         </li>
@@ -27,8 +26,9 @@ const u = ui[lang].values;
   @media (min-width: 720px) { .values-list { grid-template-columns: repeat(3, 1fr); } }
   .values-list li { display: grid; justify-items: center; gap: 0.35rem; }
   .values-icon { display: grid; place-items: center; inline-size: 3rem; block-size: 3rem; border-radius: 50%; background: var(--navy); color: var(--milk); }
-  .values-icon :global(svg) { inline-size: 1.3rem; block-size: 1.3rem; fill: currentColor; stroke: none; }
+  .values-icon { inline-size: 3.5rem; block-size: 3.5rem; box-shadow: 0 0 0 4px var(--cream), 0 0 0 5.5px var(--navy); }
+  .emblem { inline-size: 1.9rem; block-size: 1.5rem; background: currentColor; -webkit-mask: url('/img/emblem.png') center / contain no-repeat; mask: url('/img/emblem.png') center / contain no-repeat; }
   .values-list strong { font-family: var(--font-display); font-size: var(--step-1); color: var(--navy); font-weight: 600; }
-  .values-list strong[lang='it'] { font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; }
+  .values-list strong[lang='it'] { font-family: var(--font-brand); font-style: italic; }
   .values-list span:last-child { color: var(--ink-soft); }
 </style>

@@ -1,13 +1,13 @@
 /* ==========================================================================
    BONTÀ DI LATTE · CHARTE (tokens)
    Ne pas modifier les couleurs de marque. Contrastes vérifiés (WCAG AA) :
-   ink/milk 13.9 · ink-soft/milk 5.5 · ink-soft/cream 4.9 · navy/milk 9.4
-   milk/navy-deep 12.0 · mist/navy-deep 9.0 · mist/navy 7.0 · milk/green 4.7
+   ink/milk 13.9 · ink-soft/milk 5.5 · ink-soft/cream 4.9 · navy/milk 11.5
+   milk/navy-deep 14.6 · mist/navy-deep 10.8 · mist/navy 8.6 · milk/green 4.7 · milk/red 4.7
    ========================================================================== */
 :root {
   /* Couleurs de marque */
-  --navy: #1c3f6e;
-  --navy-deep: #142e52;
+  --navy: #0b2e6b;
+  --navy-deep: #071e47;
   --milk: #f7f0e6;
   --cream: #efe3d0;
   --ink: #2b211b;
@@ -21,8 +21,10 @@
   --white: #ffffff;         /* uniquement pour le filet vert-blanc-rouge */
 
   /* Typographies */
-  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni 72', Georgia, serif;
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --font-body: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Police « marque » : toujours latine, même dans la page arabe (nom, mots italiens, chiffres) */
+  --font-brand: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --font-arabic: 'Noto Naskh Arabic', 'Geeza Pro', 'Arabic Typesetting', serif;
 
   /* Échelle typographique fluide (360 → 1440 px) */
@@ -97,14 +99,18 @@ ul, ol { margin: 0; padding: 0; }
 h1, h2, h3, h4 {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.08;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
   font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 60;
 }
 :lang(ar) :is(h1, h2, h3, h4) { line-height: 1.4; letter-spacing: 0; font-weight: 700; }
-h1 em, h2 em, h3 em { font-style: italic; font-weight: 500; }
+h1 em, h2 em, h3 em { font-style: italic; font-weight: 500; color: var(--accent-em, inherit); }
+/* Le mot en valeur passe en rouge sur fond clair ; il reste dans la couleur du texte sur fond bleu */
+body { --accent-em: var(--red); }
+.on-dark, .on-navy, .section--navy, .page-banner, .promo-card, :lang(ar) { --accent-em: currentColor; }
 /* En arabe, pas d'italique : le mot en valeur prend la couleur et le trait */
 :lang(ar) :is(h1, h2, h3) em {
   font-style: normal;
@@ -114,8 +120,8 @@ h1 em, h2 em, h3 em { font-style: italic; font-weight: 500; }
 p, li { text-wrap: pretty; }
 
 /* Texte latin (marque, mots italiens) dans la page arabe */
-[lang='it'], .latin { font-family: 'Bodoni Moda', Georgia, serif; }
-.brand-word { font-family: 'Bodoni Moda', Georgia, serif; font-weight: 600; }
+[lang='it'], .latin { font-family: var(--font-brand); }
+.brand-word { font-family: var(--font-brand); font-weight: 700; }
 
 ::selection { background: var(--navy); color: var(--milk); }
 
@@ -183,11 +189,11 @@ p, li { text-wrap: pretty; }
 /* Petite goutte devant chaque surtitre : le fil conducteur discret */
 .kicker::before {
   content: '';
-  inline-size: 0.6em;
-  block-size: 0.8em;
+  inline-size: 1.25em;
+  block-size: 1em;
   background: currentColor;
-  -webkit-mask: var(--drop-mask) center / contain no-repeat;
-  mask: var(--drop-mask) center / contain no-repeat;
+  -webkit-mask: url('/img/emblem.png') center / contain no-repeat;
+  mask: url('/img/emblem.png') center / contain no-repeat;
   flex: none;
 }
 
@@ -243,7 +249,7 @@ p, li { text-wrap: pretty; }
 .btn svg { inline-size: 1.15em; block-size: 1.15em; flex: none; transition: transform 0.3s var(--ease-out); }
 .btn:active { transform: scale(0.97); }
 @media (hover: hover) {
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px rgb(20 46 82 / 0.6); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px rgb(7 30 71 / 0.6); }
   .btn:hover .icon-arrow { transform: translateX(3px); }
   [dir='rtl'] .btn:hover .icon-arrow { transform: scaleX(-1) translateX(3px); }
 }

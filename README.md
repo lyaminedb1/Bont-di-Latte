@@ -4,7 +4,7 @@ Site de la fromagerie artisanale **Bontà di Latte** : mozzarella fresca 100 % n
 Bilingue français (`/`) et arabe (`/ar/`, mise en page miroir), statique, déployé sur Netlify.
 
 - **Stack** : [Astro](https://astro.build) en sortie 100 % statique, CSS natif avec variables, ~2 Ko de JavaScript maison (aucune librairie côté client).
-- **Polices** : Bodoni Moda (titres), Work Sans (texte), Noto Naskh Arabic (arabe), via Google Fonts, chargées sans bloquer l'affichage.
+- **Polices** : Fraunces (titres), Work Sans (texte), Noto Naskh Arabic (arabe), via Google Fonts, chargées sans bloquer l'affichage.
 - **Mesures (Lighthouse mobile, en local)** : Performance 99–100 · Accessibilité 100 · Bonnes pratiques 100 · SEO 100.
 
 ### Structure du site (FR à `/`, AR à `/ar/`)
@@ -169,8 +169,8 @@ npm run images
 
 | Couleur | Hex | Usage |
 | --- | --- | --- |
-| Bleu marine | `#1C3F6E` | marque, boutons, titres de produits |
-| Bleu foncé | `#142E52` | héros, section Professionnels, pied de page |
+| Bleu marine | `#0B2E6B` | marque (aligné sur le logo), boutons, titres |
+| Bleu foncé | `#071E47` | héros, section Professionnels, pied de page |
 | Blanc lait | `#F7F0E6` | fond principal (jamais de blanc pur) |
 | Crème | `#EFE3D0` | sections alternées |
 | Encre | `#2B211B` | texte |

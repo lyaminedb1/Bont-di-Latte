@@ -11,7 +11,7 @@ const f = d.form;
 const fr = t('fr').pro.form;
 ---
 
-<section id="professionnels" class="section section--navy pro on-dark" aria-labelledby="pro-title">
+<section id="professionnels" class="section section--navy tex-navy tex-deep pro on-dark" aria-labelledby="pro-title">
   <div class="tricolore pro-filet" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="container pro-grid">
     <div class="pro-text">
@@ -102,7 +102,7 @@ const fr = t('fr').pro.form;
   .pro-args { display: grid; gap: var(--space-m); margin-block-end: var(--space-l); list-style: none; }
   @media (min-width: 640px) { .pro-args { grid-template-columns: 1fr 1fr; gap: var(--space-l) var(--space-m); } }
   .pro-args li { display: flex; gap: 0.9rem; padding-block-start: var(--space-s); border-block-start: 1px solid var(--line-dark); }
-  .pro-num { font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; font-size: var(--step-1); color: var(--mist); line-height: 1.4; }
+  .pro-num { font-family: var(--font-brand); font-style: italic; font-size: var(--step-1); color: var(--mist); line-height: 1.4; }
   .pro-args strong { display: block; color: var(--milk); font-weight: 600; }
   .pro-args span:not(.pro-num) { color: var(--mist); }
 

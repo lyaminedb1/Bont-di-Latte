@@ -1,4 +1,5 @@
 ---
+import Ribbon from '../components/Ribbon.astro';
 import Page from '../layouts/Page.astro';
 import PageBanner from '../components/PageBanner.astro';
 import RecipeCard from '../components/RecipeCard.astro';
@@ -59,7 +60,7 @@ const ld = {
   </div>
 
   <section class="container section-tight" aria-labelledby="rv-others">
-    <h2 id="rv-others" class="brand-title">{p.others}</h2>
+    <div class="title-block"><h2 id="rv-others" class="brand-title">{p.others}</h2><Ribbon /></div>
     <Carousel lang={lang} label={p.others} item="min(80%, 16rem)">
       {others.map((o) => <li><RecipeCard lang={lang} recipe={o} /></li>)}
     </Carousel>
@@ -81,7 +82,7 @@ const ld = {
   .rv-ing :global(svg) { flex: none; inline-size: 1.3rem; block-size: 1.3rem; margin-block-start: 0.2rem; color: var(--green); stroke-width: 2.4; }
   .rv-steps ol { display: grid; gap: var(--space-m); list-style: none; }
   .rv-steps li { display: flex; gap: 1rem; align-items: flex-start; }
-  .rv-num { flex: none; display: grid; place-items: center; inline-size: 2.4rem; block-size: 2.4rem; border-radius: 50%; background: var(--red); color: var(--milk); font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; }
+  .rv-num { flex: none; display: grid; place-items: center; inline-size: 2.4rem; block-size: 2.4rem; border-radius: 50%; background: var(--red); color: var(--milk); font-family: var(--font-brand); font-weight: 700; }
   .rv-steps p { margin: 0.35rem 0 0; font-size: var(--step-1); }
   .rv-product { max-inline-size: 22rem; }
   @media (min-width: 900px) {

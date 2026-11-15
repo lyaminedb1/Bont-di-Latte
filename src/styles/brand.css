@@ -5,7 +5,7 @@
 :root {
   --paper: #fffcf7;          /* cartes et en-tête : blanc cassé, jamais blanc pur */
   --radius-l: 1.5rem;
-  --shadow-card: 0 1px 2px rgb(20 46 82 / 0.06), 0 16px 32px -18px rgb(20 46 82 / 0.32);
+  --shadow-card: 0 1px 2px rgb(7 30 71 / 0.06), 0 18px 36px -20px rgb(7 30 71 / 0.35);
   --header-h: 4.5rem;
 }
 
@@ -13,7 +13,7 @@
 .brand-title {
   font-family: var(--font-display);
   font-size: var(--step-3);
-  font-weight: 600;
+  font-weight: 650;
   color: var(--navy);
   text-align: center;
   line-height: 1.12;
@@ -48,7 +48,7 @@
 .pill svg { inline-size: 1.1em; block-size: 1.1em; flex: none; }
 .pill:active { transform: scale(0.97); }
 @media (hover: hover) {
-  .pill:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -12px rgb(20 46 82 / 0.7); }
+  .pill:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -12px rgb(7 30 71 / 0.7); }
 }
 .pill--red { --pill-bg: var(--red); --pill-fg: var(--milk); }
 .pill--milk { --pill-bg: var(--milk); --pill-fg: var(--navy-deep); }
@@ -81,7 +81,7 @@
   transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgb(20 46 82 / 0.08), 0 24px 40px -20px rgb(20 46 82 / 0.45); }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgb(7 30 71 / 0.08), 0 24px 40px -20px rgb(7 30 71 / 0.45); }
 }
 /* Toute la carte est cliquable via le lien du titre */
 .card .card-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
@@ -167,3 +167,20 @@
 
 .section-tight { padding-block: var(--space-xl); }
 .carousel[data-static] .carousel-btn { display: none; }
+
+/* ---------- Ruban sous les titres ---------- */
+.title-block { display: grid; justify-items: center; gap: 0.6rem; }
+.title-block--start { justify-items: start; }
+
+/* ---------- Matière des grands panneaux bleus : halo + filigrane de l'emblème ---------- */
+.tex-navy {
+  background-color: var(--navy);
+  background-image:
+    radial-gradient(120% 90% at 100% 0%, rgb(255 255 255 / 0.09), transparent 55%),
+    url('/img/emblem-watermark.png');
+  background-repeat: no-repeat;
+  background-position: 0 0, right -3rem bottom -2.5rem;
+  background-size: auto, min(22rem, 60%);
+}
+.tex-navy.tex-deep { background-color: var(--navy-deep); }
+[dir='rtl'] .tex-navy { background-position: 0 0, left -3rem bottom -2.5rem; background-image: radial-gradient(120% 90% at 0% 0%, rgb(255 255 255 / 0.09), transparent 55%), url('/img/emblem-watermark.png'); }

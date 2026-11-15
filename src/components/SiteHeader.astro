@@ -81,13 +81,13 @@ const otherHref = lang === 'fr' ? `/ar${pathNoLang}` : pathNoLang;
     z-index: 60;
     block-size: var(--header-h);
     background: var(--paper);
-    box-shadow: 0 1px 0 var(--line), 0 6px 18px -14px rgb(20 46 82 / 0.5);
+    box-shadow: 0 1px 0 var(--line), 0 6px 18px -14px rgb(7 30 71 / 0.5);
   }
   .sh-inner { position: relative; display: flex; align-items: center; gap: var(--space-m); block-size: 100%; }
 
   /* Logo en médaillon qui déborde sous la barre */
   .sh-logo { position: relative; z-index: 2; flex: none; align-self: flex-start; margin-block-start: 0.45rem; border-radius: 50%; }
-  .sh-logo img { inline-size: 11rem; block-size: auto; filter: drop-shadow(0 6px 10px rgb(20 46 82 / 0.25)); transition: transform 0.3s var(--ease-out); }
+  .sh-logo img { inline-size: 11rem; block-size: auto; filter: drop-shadow(0 6px 10px rgb(7 30 71 / 0.25)); transition: transform 0.3s var(--ease-out); }
   @media (hover: hover) { .sh-logo:hover img { transform: translateY(2px) rotate(-1deg); } }
 
   .sh-nav { flex: 1; }
