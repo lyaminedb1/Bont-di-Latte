@@ -1,0 +1,111 @@
+---
+// « D'où l'on vient » : Médéa (où nous avons grandi) et la Campanie (berceau de la pasta filata).
+// L'Italie évoque le savoir-faire, pas l'origine : la mozzarella est fabriquée en Algérie.
+import type { Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const o = ui[lang].pages.story.origins;
+---
+<section class="section origins" aria-labelledby="origins-title">
+  <div class="container origins-grid">
+    <div class="origins-text">
+      <p class="kicker" data-reveal>{o.kicker}</p>
+      <h2 id="origins-title" data-reveal>{o.titleBefore}<em>{o.titleEm}</em>{o.titleAfter}</h2>
+      {o.paragraphs.map((p, i) => <p class:list={['origins-p', { lead: i === 0 }]} data-reveal style={`--reveal-delay:${i * 70}ms`}>{p}</p>)}
+      <blockquote class="origins-quote" data-reveal>
+        <p>{o.quote}</p>
+      </blockquote>
+    </div>
+
+    <figure class="origins-art" data-reveal style="--reveal-delay: 120ms">
+      <svg viewBox="0 0 640 420" role="img" aria-label={o.artLabel}>
+        <rect width="640" height="420" rx="28" fill="#EFE3D0" />
+        <!-- ciel -->
+        <circle cx="96" cy="86" r="26" fill="#F7F0E6" />
+        <circle cx="560" cy="70" r="20" fill="#F7F0E6" />
+
+        <!-- Médéa : collines de l'Atlas tellien, maisons blanches, oliviers -->
+        <path d="M0 250C40 200 90 176 140 186S220 150 270 178 310 230 330 262V420H0Z" fill="#AFC0D5" />
+        <path d="M0 290C50 250 110 236 170 246S260 228 320 272V420H0Z" fill="#7E97B8" />
+        <g fill="#F7F0E6" stroke="#4E6E99" stroke-width="1.2">
+          <rect x="120" y="226" width="22" height="16" /><rect x="146" y="220" width="18" height="22" /><rect x="168" y="228" width="24" height="14" />
+          <rect x="196" y="224" width="16" height="18" />
+        </g>
+        <g fill="#4E6E99"><rect x="128" y="232" width="5" height="6" /><rect x="152" y="228" width="4" height="6" /><rect x="176" y="232" width="5" height="6" /></g>
+        <g fill="#2F527F">
+          {[[60, 268], [92, 262], [240, 262], [272, 270]].map(([x, y]) => (
+            <g transform={`translate(${x} ${y})`}><rect x="-2.5" y="0" width="5" height="16" fill="#2B3F5C" /><circle cx="0" cy="-6" r="13" /><circle cx="-10" cy="0" r="9" /><circle cx="10" cy="-1" r="10" /></g>
+          ))}
+        </g>
+
+        <!-- Campanie : volcan, golfe, pins parasols, maisons à toits de tuiles -->
+        <path d="M330 262C360 238 392 214 430 150L452 140 470 150C510 214 560 236 640 250V420H330Z" fill="#9DB0C9" />
+        <path d="M430 150L452 140 470 150 462 158 452 152 440 158Z" fill="#6F89AD" />
+        <g>
+          {[[372, 248], [596, 236]].map(([x, y]) => (
+            <g transform={`translate(${x} ${y})`}><path d="M0 0V-20" stroke="#2B3F5C" stroke-width="3" /><ellipse cx="0" cy="-24" rx="22" ry="8" fill="#2F527F" /></g>
+          ))}
+        </g>
+        <g stroke="#4E6E99" stroke-width="1.2">
+          <rect x="500" y="244" width="18" height="16" fill="#F7F0E6" /><path d="M498 245 509 236 520 245Z" fill="#C8322B" opacity=".8" />
+          <rect x="524" y="240" width="22" height="20" fill="#F7F0E6" /><path d="M522 241 535 231 548 241Z" fill="#C8322B" opacity=".8" />
+          <rect x="552" y="246" width="16" height="14" fill="#F7F0E6" /><path d="M550 247 560 239 570 247Z" fill="#C8322B" opacity=".8" />
+        </g>
+
+        <!-- La Méditerranée -->
+        <path d="M0 300C80 288 160 312 240 300S400 284 480 298 600 312 640 300V420H0Z" fill="#1C3F6E" />
+        <path d="M0 330C90 318 170 342 260 330S420 316 520 330 600 340 640 332V420H0Z" fill="#142E52" />
+        <g fill="none" stroke="#F7F0E6" stroke-linecap="round" stroke-width="2" opacity=".55">
+          <path d="M70 316c12-6 24-6 36 0" /><path d="M300 312c12-6 24-6 36 0" /><path d="M470 320c12-6 24-6 36 0" />
+          <path d="M180 352c12-6 24-6 36 0" /><path d="M400 356c12-6 24-6 36 0" />
+        </g>
+
+        <!-- Le lien : un arc en pointillés et la goutte de lait -->
+        <path d="M168 206C220 40 420 40 452 128" fill="none" stroke="#1C3F6E" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round" />
+        <circle cx="168" cy="206" r="7" fill="#C8322B" stroke="#F7F0E6" stroke-width="3" />
+        <circle cx="452" cy="128" r="7" fill="#C8322B" stroke="#F7F0E6" stroke-width="3" />
+        <g transform="translate(312 68)">
+          <circle r="30" fill="#F7F0E6" stroke="#1C3F6E" stroke-width="2" />
+          <path d="M0-17C0-17-10-5-10 3a10 10 0 0 0 20 0C10-5 0-17 0-17Z" fill="#1C3F6E" />
+          <rect x="-18" y="20" width="12" height="3" fill="#1E7B4A" /><rect x="-6" y="20" width="12" height="3" fill="#FFFFFF" /><rect x="6" y="20" width="12" height="3" fill="#C8322B" />
+        </g>
+      </svg>
+      <!-- Le dessin suit la géographie (Médéa au sud-ouest, Campanie au nord-est) : légende toujours de gauche à droite -->
+      <figcaption class="origins-legend" dir="ltr">
+        <span class="lg-place" dir="auto"><strong>{o.medea.name}</strong><small>{o.medea.note}</small></span>
+        <span class="lg-sea" dir="auto">{o.sea}</span>
+        <span class="lg-place lg-end" dir="auto"><strong>{o.campania.name}</strong><small>{o.campania.note}</small></span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .origins-grid { display: grid; gap: var(--space-xl); align-items: center; }
+  @media (min-width: 960px) { .origins-grid { grid-template-columns: 1.05fr 1fr; gap: clamp(3rem, 6vw, 6rem); } }
+  .origins h2 { font-size: var(--step-4); margin-block-end: var(--space-m); }
+  .origins-p { max-inline-size: 38rem; }
+  .origins-p:not(.lead) { color: var(--ink); }
+  .origins-quote {
+    margin: var(--space-l) 0 0;
+    padding-inline-start: var(--space-m);
+    border-inline-start: 3px solid var(--red);
+  }
+  .origins-quote p { font-family: var(--font-display); font-size: var(--step-2); font-style: italic; color: var(--navy); line-height: 1.3; }
+  :lang(ar) .origins-quote p { font-style: normal; font-weight: 600; }
+
+  .origins-art { margin: 0; }
+  .origins-art svg { inline-size: 100%; block-size: auto; border-radius: var(--radius-l); box-shadow: var(--shadow-paper); }
+  .origins-legend { display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 0.75rem; margin-block-start: var(--space-s); }
+  .lg-place { display: grid; gap: 0.1rem; }
+  .lg-end { text-align: right; justify-items: right; }
+  .lg-place:not(.lg-end) { text-align: left; justify-items: left; }
+  .lg-place strong { font-family: var(--font-display); font-size: var(--step-1); color: var(--navy); font-weight: 600; }
+  :lang(ar) .lg-place strong { font-weight: 700; }
+  .lg-place small { font-size: 0.85rem; color: var(--ink-soft); }
+  :lang(ar) .lg-place small { font-size: 0.95rem; }
+  .lg-sea { align-self: center; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  :lang(ar) .lg-sea { letter-spacing: 0; font-size: 0.9rem; }
+  @media (max-width: 479.98px) { .lg-sea { display: none; } .origins-legend { grid-template-columns: 1fr 1fr; } }
+</style>

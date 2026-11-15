@@ -128,7 +128,23 @@ const fr = {
     story: {
       title: 'Notre histoire',
       meta: 'Notre histoire et notre savoir-faire · Bontà di Latte',
-      lead: 'Une fromagerie artisanale algérienne qui a fait un choix simple : du lait frais, du sel, du temps, et des mains.',
+      lead: 'Des enfants de Médéa, un geste venu de Campanie, et un choix simple\u00a0: du lait frais, du sel, du temps, et des mains.',
+      origins: {
+        kicker: 'D’où l’on vient',
+        titleBefore: 'De Médéa à la Campanie, ',
+        titleEm: 'un même amour du lait',
+        titleAfter: '.',
+        paragraphs: [
+          'Nous avons grandi à Médéa, sur les hauteurs de l’Atlas tellien, à moins de cent kilomètres au sud d’Alger. Une terre de collines, de vergers et d’élevages, où l’hiver est frais et où le lait du matin fait partie de la vie de tous les jours.',
+          'De l’autre côté de la Méditerranée, en Campanie, est née la pasta filata\u00a0: on chauffe le caillé, on l’étire, on le plie, on le façonne à la main. C’est ce geste de casaro, transmis de génération en génération en Italie, que nous avons voulu apprendre et ramener chez nous.',
+          'Bontà di Latte, c’est la rencontre des deux rives\u00a0: le savoir-faire des maîtres fromagers de Campanie, et le lait, le climat et l’exigence de notre région. Une mozzarella fresca fabriquée en Algérie, qui porte les couleurs que nos deux pays partagent\u00a0: le vert, le blanc et le rouge.',
+        ],
+        medea: { name: 'Médéa', note: 'Atlas tellien · notre wilaya' },
+        sea: 'Méditerranée',
+        campania: { name: 'Campanie', note: 'Berceau de la pasta filata' },
+        artLabel: 'Illustration : les collines de Médéa et le golfe de Campanie, reliés par une goutte de lait au-dessus de la Méditerranée',
+        quote: 'Le geste vient d’Italie. Le lait, le cœur et les mains sont de Médéa.',
+      },
     },
     pro: {
       title: 'Espace professionnels',
@@ -282,7 +298,23 @@ const ar: typeof fr = {
     story: {
       title: 'قصّتنا',
       meta: 'قصّتنا وحِرفتنا · Bontà di Latte',
-      lead: 'مَجبنة حِرفية جزائرية اختارت شيئًا بسيطًا: حليب طازج، ملح، وقت، وأيادٍ.',
+      lead: 'أبناء المدية، وحِرفة قادمة من كامبانيا، واختيار بسيط: حليب طازج، ملح، وقت، وأيادٍ.',
+      origins: {
+        kicker: 'من أين أتينا',
+        titleBefore: 'من المدية إلى كامبانيا، ',
+        titleEm: 'حبّ واحد للحليب',
+        titleAfter: '.',
+        paragraphs: [
+          'كبرنا في المدية، على مرتفعات الأطلس التلي، على بُعد أقل من مئة كيلومتر جنوب الجزائر العاصمة. أرض تلال وبساتين ومواشٍ، شتاؤها بارد، وحليب الصباح فيها جزء من الحياة اليومية.',
+          'وعلى الضفة الأخرى من البحر الأبيض المتوسط، في كامبانيا، وُلدت الـ pasta filata: تُسخَّن الخثارة، تُمَدّ، تُطوى، وتُشكَّل باليد. هذه الحِرفة، حِرفة الـ casaro التي تتوارثها الأجيال في إيطاليا، أردنا أن نتعلّمها ونعود بها إلى بلادنا.',
+          'Bontà di Latte هي لقاء الضفّتين: خبرة كبار صانعي الأجبان في كامبانيا، وحليب منطقتنا ومناخها وإتقانها. موزاريلا طازجة مصنوعة في الجزائر، تحمل الألوان التي يتقاسمها بلدانا: الأخضر والأبيض والأحمر.',
+        ],
+        medea: { name: 'المدية', note: 'الأطلس التلي · ولايتنا' },
+        sea: 'البحر الأبيض المتوسط',
+        campania: { name: 'كامبانيا', note: 'مهد الـ pasta filata' },
+        artLabel: 'رسم: تلال المدية وخليج كامبانيا، تربط بينهما قطرة حليب فوق البحر الأبيض المتوسط',
+        quote: 'الحِرفة من إيطاليا، أما الحليب والقلب والأيادي فمن المدية.',
+      },
     },
     pro: {
       title: 'فضاء المهنيين',

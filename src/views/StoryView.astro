@@ -1,6 +1,7 @@
 ---
 import Page from '../layouts/Page.astro';
 import PageBanner from '../components/PageBanner.astro';
+import Origins from '../components/Origins.astro';
 import Promise from '../components/Promise.astro';
 import Craft from '../components/Craft.astro';
 import { type Lang } from '../i18n';
@@ -11,6 +12,7 @@ const p = ui[lang].pages.story;
 ---
 <Page lang={lang} title={p.meta} description={p.lead} path="notre-histoire/" current="histoire">
   <PageBanner lang={lang} title={p.title} lead={p.lead} />
+  <Origins lang={lang} />
   <Promise lang={lang} />
   <Craft lang={lang} />
 </Page>
