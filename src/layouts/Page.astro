@@ -1,0 +1,27 @@
+---
+// Gabarit commun : en-tête, contenu, bande paysage + pied de page, bouton WhatsApp.
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import type { Lang } from '../i18n';
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+  current?: 'recettes' | 'produits' | 'histoire' | 'pro' | 'contact' | 'home';
+  ogImage?: string;
+}
+const { lang, title, description, path = '', noindex = false, current } = Astro.props;
+---
+<Base lang={lang} title={title} description={description} path={path} noindex={noindex}>
+  <slot name="head" slot="head" />
+  <SiteHeader lang={lang} current={current} />
+  <main id="contenu" tabindex="-1">
+    <slot />
+  </main>
+  <SiteFooter lang={lang} />
+  <WhatsAppFab lang={lang} />
+</Base>

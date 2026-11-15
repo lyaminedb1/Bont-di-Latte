@@ -1,0 +1,98 @@
+---
+// Média du héros : vidéo Higgsfield (si présente dans public/video/) ou animation CSS goutte → logo.
+import { findVideo } from '../lib/media';
+interface Props { label: string }
+const { label } = Astro.props;
+const wide = findVideo('hero-16x9');
+const tall = findVideo('hero-9x16');
+const hasVideo = Boolean(wide || tall);
+const desktopPoster = wide?.poster ?? tall?.poster;
+const mobilePoster = tall?.poster ?? wide?.poster;
+const d = { videoLabel: label };
+---
+<div class="hero-media">
+    {hasVideo ? (
+      <>
+        {/* Image de repli (mouvement réduit, économie de données) : la bonne image selon l'écran */}
+        <picture class="hero-poster">
+          {mobilePoster && <source media="(max-aspect-ratio: 4/5)" srcset={mobilePoster} />}
+          <img src={desktopPoster} alt="" width="1920" height="1080" fetchpriority="high" decoding="async" />
+        </picture>
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster={mobilePoster}
+          data-hero-video data-poster-wide={desktopPoster} aria-label={d.videoLabel}>
+          {tall?.webm && <source src={tall.webm} type="video/webm" media="(max-aspect-ratio: 4/5)" />}
+          {tall && <source src={tall.mp4} type="video/mp4" media="(max-aspect-ratio: 4/5)" />}
+          {wide?.webm && <source src={wide.webm} type="video/webm" />}
+          {wide && <source src={wide.mp4} type="video/mp4" />}
+        </video>
+        {/* Exécuté immédiatement : coupe la vidéo avant téléchargement si mouvement réduit ou économie de données */}
+        <script is:inline>
+          (function () {
+            var v = document.querySelector('[data-hero-video]');
+            if (!v) return;
+            var c = navigator.connection;
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce || (c && c.saveData)) {
+              v.removeAttribute('autoplay');
+              v.querySelectorAll('source').forEach(function (s) { s.remove(); });
+              v.load();
+              v.hidden = true;
+              return;
+            }
+            // Poster vertical par défaut (mobile d'abord) ; version large sur écran horizontal
+            if (v.dataset.posterWide && !window.matchMedia('(max-aspect-ratio: 4/5)').matches) v.poster = v.dataset.posterWide;
+          })();
+        </script>
+      </>
+    ) : (
+      <div class="hero-drop" aria-hidden="true">
+        <span class="drop"></span>
+        <span class="ripple"></span>
+        <span class="ripple ripple--2"></span>
+        <img class="hero-logo" src="/img/logo-ovale-960.webp" srcset="/img/logo-ovale-480.webp 480w, /img/logo-ovale-720.webp 720w, /img/logo-ovale-960.webp 960w"
+          sizes="(max-width: 900px) 70vw, 26rem" width="960" height="443" alt="" fetchpriority="high" />
+      </div>
+    )}
+</div>
+
+<style>
+  .hero-media { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 45%, #24497c 0%, var(--navy-deep) 75%); }
+  .hero-poster img, .hero-video { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .hero-video { background: transparent; }
+
+  .hero-drop { position: absolute; inset: 0; display: grid; place-items: center; }
+  .hero-drop > * { grid-area: 1 / 1; }
+  .hero-logo {
+    inline-size: min(78%, 26rem);
+    block-size: auto;
+    opacity: 0;
+    transform: scale(0.94);
+    animation: logo-in 0.7s var(--ease-out) 0.62s forwards;
+    filter: drop-shadow(0 20px 40px rgb(0 0 0 / 0.25));
+  }
+  .drop {
+    inline-size: 1.1rem; block-size: 1.5rem; background: var(--milk);
+    -webkit-mask: var(--drop-mask) center / contain no-repeat;
+    mask: var(--drop-mask) center / contain no-repeat;
+    opacity: 0;
+    animation: drop-fall 0.6s cubic-bezier(0.55, 0, 0.9, 0.4) 0.05s forwards;
+  }
+  .ripple {
+    inline-size: 9rem; block-size: 2.2rem; border: 1.5px solid rgb(247 240 230 / 0.7); border-radius: 50%;
+    opacity: 0; transform: scale(0.1);
+    animation: ripple 1.1s var(--ease-out) 0.6s forwards;
+  }
+  .ripple--2 { animation-delay: 0.8s; }
+  @keyframes drop-fall {
+    0% { opacity: 0; transform: translateY(-14rem) scaleY(1.1); }
+    15% { opacity: 1; }
+    95% { opacity: 1; transform: translateY(0) scaleY(1.2); }
+    100% { opacity: 0; transform: translateY(0) scale(1.6, 0.4); }
+  }
+  @keyframes ripple { 0% { opacity: 0.9; transform: scale(0.1); } 100% { opacity: 0; transform: scale(2.6); } }
+  @keyframes logo-in { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-logo { opacity: 1; transform: none; animation: none; }
+    .drop, .ripple { display: none; }
+  }
+</style>

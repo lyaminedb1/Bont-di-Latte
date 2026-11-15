@@ -1,0 +1,49 @@
+---
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site } from '../config/site';
+import { type Recipe, levelLabel, categoryLabel } from '../data/catalog';
+import FoodArt from './FoodArt.astro';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; recipe: Recipe; headingLevel?: 'h2' | 'h3' }
+const { lang, recipe: r, headingLevel = 'h3' } = Astro.props;
+const u = ui[lang];
+const H = headingLevel;
+const photo = site.recipePhotos[r.slug];
+---
+<article class="card rcard" data-recipe data-cat={r.category}
+  data-search={`${r.title.fr} ${r.title.ar} ${r.ingredients.fr.join(' ')} ${r.ingredients.ar.join(' ')}`.toLowerCase()}>
+  <div class="rcard-media">
+    {photo
+      ? <img src={photo} alt="" width="800" height="600" loading="lazy" decoding="async" />
+      : <FoodArt kind={r.art} />}
+    <span class="rcard-cat">{categoryLabel(lang, r.category)}</span>
+  </div>
+  <div class="rcard-body">
+    <H class="rcard-title"><a class="card-link" href={localePath(lang, `recettes/${r.slug}/`)}>{r.title[lang]}</a></H>
+    <p class="meta-row">
+      <span><Icon name="clock" />{r.minutes} {u.pages.recipe.minutes}</span>
+      <span><Icon name="users" />{r.servings}</span>
+      <span>{levelLabel(lang, r.level)}</span>
+    </p>
+    <span class="pill rcard-pill" aria-hidden="true">{u.recipesBlock.cta}</span>
+  </div>
+</article>
+<style>
+  .rcard { block-size: 100%; }
+  .rcard-media { position: relative; aspect-ratio: 4 / 3; background: var(--cream); overflow: hidden; }
+  .rcard-media img, .rcard-media :global(svg) { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; transition: transform 0.6s var(--ease-out); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .rcard:hover .rcard-media img, .rcard:hover .rcard-media :global(svg) { transform: scale(1.05); }
+  }
+  .rcard-cat {
+    position: absolute; inset-block-start: 0.75rem; inset-inline-start: 0.75rem;
+    padding: 0.2rem 0.65rem; border-radius: 999px; background: var(--paper); color: var(--navy);
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  :lang(ar) .rcard-cat { letter-spacing: 0; font-size: 0.85rem; }
+  .rcard-body { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1.1rem 1rem 1.25rem; }
+  .rcard-title { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; color: var(--navy); line-height: 1.2; text-wrap: balance; }
+  :lang(ar) .rcard-title { font-weight: 700; }
+  .rcard-pill { margin-block-start: auto; min-block-size: 2.4rem; padding-block: 0.4rem; font-size: 0.88rem; }
+</style>

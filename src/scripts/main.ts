@@ -1,5 +1,5 @@
-// Script unique du site (~2 Ko) : apparitions, en-tête, défilement horizontal,
-// vidéos de section différées et bouton WhatsApp. Aucune librairie.
+// Script unique du site : apparitions, menu, carrousels, recherche de recettes,
+// défilement horizontal, vidéos différées et bouton WhatsApp. Aucune librairie.
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
@@ -24,41 +24,139 @@ if (reduceMotion.matches || !('IntersectionObserver' in window)) {
   reveals.forEach((el) => io.observe(el));
 }
 
-/* ---------- 2. En-tête : transparent sur le héros, opaque ensuite ; bouton WhatsApp ---------- */
-const header = document.querySelector<HTMLElement>('[data-header]');
-const hero = document.querySelector<HTMLElement>('[data-hero]');
+/* ---------- 2. Bouton WhatsApp flottant : visible après un peu de défilement ---------- */
 const fab = document.querySelector<HTMLElement>('[data-fab]');
-if (hero && 'IntersectionObserver' in window) {
-  new IntersectionObserver(
-    ([e]) => {
-      const past = !e.isIntersecting;
-      if (header) header.dataset.state = past ? 'solid' : 'over';
-      fab?.toggleAttribute('data-hidden', !past);
-    },
-    { rootMargin: '-64px 0px 0px 0px', threshold: 0.12 },
-  ).observe(hero);
-} else {
-  fab?.removeAttribute('data-hidden');
+if (fab) {
+  const onScroll = () => fab.toggleAttribute('data-hidden', window.scrollY < 500);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 }
 
-/* Lien de navigation actif selon la section visible */
-const navLinks = document.querySelectorAll<HTMLAnchorElement>('.main-nav a[href^="#"]');
-if (navLinks.length && 'IntersectionObserver' in window) {
-  const byId = new Map([...navLinks].map((a) => [a.hash.slice(1), a]));
-  const spy = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting) continue;
-        navLinks.forEach((a) => a.removeAttribute('aria-current'));
-        byId.get(e.target.id)?.setAttribute('aria-current', 'true');
-      }
-    },
-    { rootMargin: '-45% 0px -50% 0px' },
+/* ---------- En-tête : tiroir mobile et sous-menus ---------- */
+const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+const menu = document.querySelector<HTMLElement>('[data-menu]');
+const subButtons = document.querySelectorAll<HTMLButtonElement>('[data-sub] > button');
+const closeSubs = (except?: HTMLButtonElement) =>
+  subButtons.forEach((b) => b !== except && b.setAttribute('aria-expanded', 'false'));
+const setMenu = (open: boolean) => {
+  if (!menuBtn || !menu) return;
+  menuBtn.setAttribute('aria-expanded', String(open));
+  menu.toggleAttribute('data-open', open);
+  const label = menuBtn.querySelector('[data-menu-label]');
+  if (label) label.textContent = (open ? menuBtn.dataset.labelClose : menuBtn.dataset.labelOpen) ?? '';
+  document.documentElement.style.overflow = open ? 'hidden' : '';
+  if (open) menu.querySelector<HTMLElement>('a, button')?.focus();
+};
+menuBtn?.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+subButtons.forEach((b) =>
+  b.addEventListener('click', () => {
+    const open = b.getAttribute('aria-expanded') !== 'true';
+    closeSubs(b);
+    b.setAttribute('aria-expanded', String(open));
+  }),
+);
+document.addEventListener('click', (e) => {
+  if (!(e.target as HTMLElement).closest('[data-sub]')) closeSubs();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const openSub = [...subButtons].find((b) => b.getAttribute('aria-expanded') === 'true');
+  if (openSub) { closeSubs(); openSub.focus(); return; }
+  if (menuBtn?.getAttribute('aria-expanded') === 'true') { setMenu(false); menuBtn.focus(); }
+});
+window.matchMedia('(min-width: 1100px)').addEventListener('change', () => setMenu(false));
+
+/* ---------- Carrousels : flèches + état des boutons ---------- */
+const isRtl = document.documentElement.dir === 'rtl';
+document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((c) => {
+  const track = c.querySelector<HTMLElement>('[data-track]');
+  const prev = c.querySelector<HTMLButtonElement>('[data-dir="prev"]');
+  const next = c.querySelector<HTMLButtonElement>('[data-dir="next"]');
+  if (!track || !prev || !next) return;
+  const step = () => {
+    const first = track.firstElementChild as HTMLElement | null;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return first ? first.offsetWidth + gap : track.clientWidth * 0.8;
+  };
+  const sync = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    const pos = Math.abs(track.scrollLeft); // négatif en RTL
+    prev.disabled = pos <= 2;
+    next.disabled = pos >= max - 2;
+    c.toggleAttribute('data-static', max <= 2);
+  };
+  const go = (dir: 1 | -1) =>
+    track.scrollBy({ left: dir * (isRtl ? -1 : 1) * step(), behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+});
+
+/* ---------- Carrousel du héros : points de navigation ---------- */
+const hc = document.querySelector<HTMLElement>('[data-hc]');
+const hcTrack = hc?.querySelector<HTMLElement>('[data-hc-track]');
+if (hc && hcTrack) {
+  const slides = [...hcTrack.children] as HTMLElement[];
+  const dots = [...hc.querySelectorAll<HTMLButtonElement>('[data-hc-dot]')];
+  const setActive = (i: number) => {
+    dots.forEach((d, k) => (k === i ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
+    // Seuls les liens de la diapositive visible sont atteignables au clavier
+    slides.forEach((s, k) => {
+      s.querySelectorAll<HTMLElement>('[data-hc-link]').forEach((a) => (k === i ? a.removeAttribute('tabindex') : a.setAttribute('tabindex', '-1')));
+      s.toggleAttribute('inert', k !== i);
+    });
+  };
+  dots.forEach((d, i) =>
+    d.addEventListener('click', () =>
+      hcTrack.scrollTo({ left: (isRtl ? -1 : 1) * i * hcTrack.clientWidth, behavior: reduceMotion.matches ? 'auto' : 'smooth' }),
+    ),
   );
-  byId.forEach((_, id) => {
-    const s = document.getElementById(id);
-    if (s) spy.observe(s);
-  });
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(slides.indexOf(e.target as HTMLElement))),
+      { root: hcTrack, threshold: 0.6 },
+    );
+    slides.forEach((s) => io.observe(s));
+  }
+  setActive(0);
+}
+
+/* ---------- Page Recettes : recherche et filtres (les paramètres ?q= et ?cat= sont lus) ---------- */
+const rf = document.querySelector<HTMLElement>('[data-recipes-filter]');
+if (rf) {
+  const q = rf.querySelector<HTMLInputElement>('[data-rf-q]')!;
+  const chips = [...rf.querySelectorAll<HTMLButtonElement>('[data-rf-cat]')];
+  const items = [...rf.querySelectorAll<HTMLElement>('[data-rf-item]')];
+  const count = rf.querySelector('[data-rf-count]')!;
+  const empty = rf.querySelector<HTMLElement>('[data-rf-empty]')!;
+  const params = new URLSearchParams(location.search);
+  let cat = params.get('cat') ?? '';
+  q.value = params.get('q') ?? '';
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const apply = () => {
+    const terms = norm(q.value.trim()).split(/\s+/).filter(Boolean);
+    let n = 0;
+    items.forEach((li) => {
+      const card = li.querySelector<HTMLElement>('[data-recipe]')!;
+      const hay = norm(card.dataset.search ?? '');
+      const ok = (!cat || card.dataset.cat === cat) && terms.every((t) => hay.includes(t));
+      li.hidden = !ok;
+      if (ok) n++;
+    });
+    chips.forEach((c) => c.setAttribute('aria-pressed', String((c.dataset.rfCat ?? '') === cat)));
+    count.textContent = String(n);
+    empty.hidden = n > 0;
+    const url = new URL(location.href);
+    q.value ? url.searchParams.set('q', q.value) : url.searchParams.delete('q');
+    cat ? url.searchParams.set('cat', cat) : url.searchParams.delete('cat');
+    history.replaceState(null, '', url);
+  };
+  q.addEventListener('input', apply);
+  q.form?.addEventListener('submit', (e) => { e.preventDefault(); apply(); });
+  chips.forEach((c) => c.addEventListener('click', () => { cat = c.dataset.rfCat ?? ''; apply(); }));
+  apply();
 }
 
 /* ---------- 3. Savoir-faire : défilement horizontal piloté par le défilement vertical ---------- */
@@ -160,6 +258,7 @@ if (lazyVideos.length) {
 
 /* ---------- 5. Vidéo du héros : pause hors écran pour économiser la batterie ---------- */
 const heroVideo = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+const hero = heroVideo?.closest<HTMLElement>('.hc-slide');
 if (heroVideo && !heroVideo.hidden && hero && 'IntersectionObserver' in window) {
   new IntersectionObserver(([e]) => {
     if (e.isIntersecting) heroVideo.play().catch(() => {});

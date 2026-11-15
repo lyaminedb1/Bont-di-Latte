@@ -1,0 +1,169 @@
+/* ==========================================================================
+   Composants de la structure « marque » : cartes, pilules, carrousels, bandeaux.
+   S'appuie sur les tokens de global.css (couleurs de la charte inchangées).
+   ========================================================================== */
+:root {
+  --paper: #fffcf7;          /* cartes et en-tête : blanc cassé, jamais blanc pur */
+  --radius-l: 1.5rem;
+  --shadow-card: 0 1px 2px rgb(20 46 82 / 0.06), 0 16px 32px -18px rgb(20 46 82 / 0.32);
+  --header-h: 4.5rem;
+}
+
+/* ---------- Titres de section centrés ---------- */
+.brand-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  line-height: 1.12;
+}
+:lang(ar) .brand-title { font-weight: 700; }
+.on-navy .brand-title, .brand-title.on-navy { color: var(--milk); }
+
+/* ---------- Boutons « pilule » ---------- */
+.pill {
+  --pill-bg: var(--navy);
+  --pill-fg: var(--milk);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding: 0.55rem 1.4rem;
+  border: 1.5px solid var(--pill-bg);
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--pill-fg);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease-out), background-color 0.25s, color 0.25s, box-shadow 0.25s;
+}
+:lang(ar) .pill { font-size: 1rem; }
+.pill svg { inline-size: 1.1em; block-size: 1.1em; flex: none; }
+.pill:active { transform: scale(0.97); }
+@media (hover: hover) {
+  .pill:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -12px rgb(20 46 82 / 0.7); }
+}
+.pill--red { --pill-bg: var(--red); --pill-fg: var(--milk); }
+.pill--milk { --pill-bg: var(--milk); --pill-fg: var(--navy-deep); }
+.pill--green { --pill-bg: var(--green); --pill-fg: var(--milk); }
+.pill--ghost { --pill-bg: transparent; --pill-fg: var(--navy); border-color: var(--navy); }
+.pill--lg { min-block-size: 3.25rem; padding-inline: 1.8rem; font-size: 1rem; }
+
+.text-link {
+  display: inline-block;
+  padding-block: 0.35rem;
+  color: var(--navy);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.25em;
+}
+.on-navy .text-link { color: var(--milk); }
+@media (hover: hover) { .text-link:hover { text-decoration-thickness: 2.5px; } }
+
+/* ---------- Cartes ---------- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgb(20 46 82 / 0.08), 0 24px 40px -20px rgb(20 46 82 / 0.45); }
+}
+/* Toute la carte est cliquable via le lien du titre */
+.card .card-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.card .card-link { text-decoration: none; color: inherit; }
+.card .card-link:focus-visible { outline: none; }
+.card:has(.card-link:focus-visible) { outline: 3px solid var(--navy); outline-offset: 3px; }
+.on-navy .card:has(.card-link:focus-visible) { outline-color: var(--milk); }
+
+/* ---------- Carrousel (défilement natif + flèches) ---------- */
+.carousel { position: relative; }
+.carousel-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--item, min(78%, 18rem));
+  gap: var(--gap, 1.25rem);
+  margin: 0;
+  padding: 0.75rem 0.25rem 1.5rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.25rem;
+  scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track > * { scroll-snap-align: start; min-inline-size: 0; }
+.carousel-btn {
+  position: absolute;
+  inset-block-start: calc(50% - 1.6rem);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--milk);
+  box-shadow: 0 6px 16px -6px rgb(43 33 27 / 0.45);
+  cursor: pointer;
+  transition: opacity 0.25s, transform 0.25s var(--ease-out);
+}
+.carousel-btn svg { inline-size: 1.3rem; block-size: 1.3rem; }
+.carousel-btn[data-dir='prev'] { inset-inline-start: -0.9rem; }
+.carousel-btn[data-dir='next'] { inset-inline-end: -0.9rem; }
+.carousel-btn[data-dir='prev'] svg { transform: scaleX(-1); }
+[dir='rtl'] .carousel-btn[data-dir='prev'] svg { transform: none; }
+[dir='rtl'] .carousel-btn[data-dir='next'] svg { transform: scaleX(-1); }
+.carousel-btn:disabled { opacity: 0.35; cursor: default; }
+@media (hover: hover) { .carousel-btn:not(:disabled):hover { transform: scale(1.08); } }
+.no-js .carousel-btn, html:not(.js) .carousel-btn { display: none; }
+@media (max-width: 639.98px) {
+  .carousel-btn { inline-size: 2.4rem; block-size: 2.4rem; }
+  .carousel-btn[data-dir='prev'] { inset-inline-start: -0.4rem; }
+  .carousel-btn[data-dir='next'] { inset-inline-end: -0.4rem; }
+}
+
+/* ---------- Bandeau de page intérieure ---------- */
+.page-banner {
+  position: relative;
+  padding-block: calc(var(--header-h) + var(--space-xl)) var(--space-xl);
+  background: var(--navy-deep);
+  color: var(--milk);
+  overflow: hidden;
+}
+.page-banner h1 { font-size: var(--step-4); font-weight: 600; max-inline-size: 22ch; }
+:lang(ar) .page-banner h1 { font-weight: 700; }
+.page-banner .lead { margin-block-start: var(--space-s); color: var(--mist); }
+.page-banner .tricolore { position: absolute; inset-inline: 0; inset-block-end: 0; }
+
+.breadcrumb { margin-block-end: var(--space-m); font-size: var(--step--1); color: var(--mist); }
+:lang(ar) .breadcrumb { font-size: var(--step-0); }
+.breadcrumb ol { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; }
+.breadcrumb li:not(:last-child)::after { content: '›'; margin-inline-start: 0.4rem; }
+[dir='rtl'] .breadcrumb li:not(:last-child)::after { content: '‹'; }
+.breadcrumb a { color: var(--milk); }
+
+/* ---------- Méta (temps, personnes) ---------- */
+.meta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1rem; font-size: 0.85rem; color: var(--ink-soft); }
+:lang(ar) .meta-row { font-size: 0.95rem; }
+.meta-row span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.meta-row svg { inline-size: 1rem; block-size: 1rem; }
+
+.section-tight { padding-block: var(--space-xl); }
+.carousel[data-static] .carousel-btn { display: none; }

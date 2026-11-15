@@ -1,0 +1,9 @@
+---
+import View from '../../../views/ProductView.astro';
+import { site } from '../../../config/site';
+export function getStaticPaths() {
+  return site.products.map((p) => ({ params: { slug: p.id }, props: { id: p.id } }));
+}
+const { id } = Astro.props;
+---
+<View lang="ar" id={id} />

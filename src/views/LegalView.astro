@@ -1,0 +1,28 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site } from '../config/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = ui[lang].pages.legal;
+const c = site.contact;
+---
+<Page lang={lang} title={p.meta} description={p.title} path="mentions-legales/">
+  <PageBanner lang={lang} title={p.title} />
+  <div class="container section-tight legal">
+    <h2>{p.editor}</h2>
+    <p>{site.legal.company}<br />{site.legal.registry}<br />{c.address[lang]}<br /><span dir="ltr">{c.phoneDisplay}</span><br />{site.legal.director}</p>
+    <h2>{p.host}</h2>
+    <p>{p.hostText}</p>
+    <h2>{p.data}</h2>
+    <p>{p.dataText}</p>
+    <h2>{p.credits}</h2>
+    <p>{p.creditsText}</p>
+  </div>
+</Page>
+<style>
+  .legal { max-inline-size: 48rem; }
+  .legal h2 { font-size: var(--step-2); color: var(--navy); margin-block: var(--space-l) var(--space-xs); }
+</style>

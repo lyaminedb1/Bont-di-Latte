@@ -88,10 +88,30 @@ export const site = {
     },
   ],
 
+  // ⚠ À COMPLÉTER : mentions légales (page /mentions-legales/).
+  legal: {
+    company: 'Raison sociale à compléter (SARL / EURL…)',
+    registry: 'RC n° à compléter · NIF à compléter',
+    director: 'Nom du responsable de la publication',
+  },
+
+  // Photos des recettes (optionnel) : déposer dans public/img/recettes/ et indiquer le chemin.
+  // Sans photo, l'illustration dessinée s'affiche. ⚠ À COMPLÉTER (optionnel)
+  recipePhotos: {
+    caprese: '',
+    'pizza-margherita': '',
+    bruschetta: '',
+    'pates-au-four': '',
+    'chakchouka-mozzarella': '',
+    'salade-de-pates-bocconcini': '',
+  } as Record<string, string>,
+
   // Réseaux sociaux (laisser vide '' pour masquer). ⚠ À COMPLÉTER
   social: {
     instagram: '',
     facebook: '',
+    tiktok: '',
+    youtube: '',
   },
 } as const;
 

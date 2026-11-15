@@ -1,0 +1,34 @@
+---
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = ui[lang].values;
+---
+<section class="values" aria-label={u.link}>
+  <div class="container values-inner">
+    <ul class="values-list">
+      {u.items.map((v, i) => (
+        <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
+          <span class="values-icon" aria-hidden="true"><Icon name="drop" /></span>
+          <strong lang={v.title.startsWith('Fatta') ? 'it' : undefined}>{v.title}</strong>
+          <span>{v.text}</span>
+        </li>
+      ))}
+    </ul>
+    <a class="pill pill--ghost" href={localePath(lang, 'notre-histoire/')}>{u.link}</a>
+  </div>
+</section>
+<style>
+  .values { background: var(--cream); padding-block: var(--space-l); }
+  .values-inner { display: grid; justify-items: center; gap: var(--space-l); }
+  .values-list { display: grid; gap: var(--space-m); list-style: none; inline-size: 100%; text-align: center; }
+  @media (min-width: 720px) { .values-list { grid-template-columns: repeat(3, 1fr); } }
+  .values-list li { display: grid; justify-items: center; gap: 0.35rem; }
+  .values-icon { display: grid; place-items: center; inline-size: 3rem; block-size: 3rem; border-radius: 50%; background: var(--navy); color: var(--milk); }
+  .values-icon :global(svg) { inline-size: 1.3rem; block-size: 1.3rem; fill: currentColor; stroke: none; }
+  .values-list strong { font-family: var(--font-display); font-size: var(--step-1); color: var(--navy); font-weight: 600; }
+  .values-list strong[lang='it'] { font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; }
+  .values-list span:last-child { color: var(--ink-soft); }
+</style>

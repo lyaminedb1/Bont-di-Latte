@@ -1,0 +1,50 @@
+---
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { recipes } from '../data/catalog';
+import FoodArt from './FoodArt.astro';
+import Carousel from './Carousel.astro';
+import RecipeCard from './RecipeCard.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = ui[lang].recipesBlock;
+---
+<section class="rb container section-tight" aria-labelledby="rb-title">
+  <div class="rb-media" data-reveal>
+    <FoodArt kind="caprese" bg="cream" label={u.alt} />
+  </div>
+  <div class="rb-panel on-navy" data-reveal style="--reveal-delay: 100ms">
+    <h2 id="rb-title" class="brand-title on-navy">{u.title}</h2>
+    <Carousel lang={lang} label={u.title} item="min(80%, 15.5rem)">
+      {recipes.map((r) => <li><RecipeCard lang={lang} recipe={r} /></li>)}
+    </Carousel>
+    <a class="text-link" href={localePath(lang, 'recettes/')}>{u.more}</a>
+  </div>
+</section>
+<style>
+  .rb { display: grid; align-items: center; }
+  .rb-media { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-l); overflow: hidden; }
+  .rb-media :global(svg) { position: absolute; inset: 0; }
+  .rb-panel {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-s);
+    min-inline-size: 0;
+    padding: var(--space-l) var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--navy);
+    color: var(--milk);
+  }
+  .rb-panel :global(.carousel) { inline-size: 100%; }
+  .rb-panel :global(.card-link:focus-visible) { outline: none; }
+  @media (max-width: 899.98px) {
+    .rb-panel { margin: -3rem 0.5rem 0; padding-inline: 1rem; }
+  }
+  @media (min-width: 900px) {
+    .rb { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr); }
+    .rb-media { aspect-ratio: 3 / 4; }
+    .rb-panel { margin-inline-start: -4rem; padding: var(--space-l) clamp(2rem, 4vw, 3.5rem); }
+  }
+</style>

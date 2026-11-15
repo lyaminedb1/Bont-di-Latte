@@ -1,0 +1,34 @@
+---
+import Page from '../layouts/Page.astro';
+import SearchBanner from '../components/SearchBanner.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
+import PromoPro from '../components/PromoPro.astro';
+import RecipesBlock from '../components/RecipesBlock.astro';
+import ProductsBlock from '../components/ProductsBlock.astro';
+import ValuesStrip from '../components/ValuesStrip.astro';
+import { t, type Lang } from '../i18n';
+import { findVideo } from '../lib/media';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const wide = findVideo('hero-16x9');
+const tall = findVideo('hero-9x16');
+---
+<Page lang={lang} title={d.meta.title} description={d.meta.description} current="home">
+  <Fragment slot="head">
+    {(wide?.poster || tall?.poster) ? (
+      <>
+        {tall?.poster && <link rel="preload" as="image" href={tall.poster} media="(max-aspect-ratio: 4/5)" fetchpriority="high" />}
+        {wide?.poster && <link rel="preload" as="image" href={wide.poster} media={tall?.poster ? '(min-aspect-ratio: 801/1000)' : undefined} fetchpriority="high" />}
+      </>
+    ) : (
+      <link rel="preload" as="image" href="/img/logo-ovale-720.webp" imagesrcset="/img/logo-ovale-480.webp 480w, /img/logo-ovale-720.webp 720w, /img/logo-ovale-960.webp 960w" imagesizes="(max-width: 900px) 70vw, 26rem" fetchpriority="high" />
+    )}
+  </Fragment>
+  <SearchBanner lang={lang} />
+  <HeroCarousel lang={lang} />
+  <PromoPro lang={lang} />
+  <RecipesBlock lang={lang} />
+  <ProductsBlock lang={lang} />
+  <ValuesStrip lang={lang} />
+</Page>

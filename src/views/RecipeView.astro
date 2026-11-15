@@ -1,0 +1,92 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Carousel from '../components/Carousel.astro';
+import FoodArt from '../components/FoodArt.astro';
+import Icon from '../components/Icon.astro';
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site } from '../config/site';
+import { recipes, levelLabel, categoryLabel, type Recipe } from '../data/catalog';
+interface Props { lang: Lang; recipe: Recipe }
+const { lang, recipe: r } = Astro.props;
+const u = ui[lang];
+const p = u.pages.recipe;
+const photo = site.recipePhotos[r.slug];
+const others = recipes.filter((x) => x.slug !== r.slug);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: r.title[lang],
+  description: r.intro[lang],
+  inLanguage: lang,
+  totalTime: `PT${r.minutes}M`,
+  recipeYield: `${r.servings}`,
+  recipeCategory: categoryLabel(lang, r.category),
+  recipeIngredient: r.ingredients[lang],
+  recipeInstructions: r.steps[lang].map((s) => ({ '@type': 'HowToStep', text: s })),
+  author: { '@type': 'Organization', name: site.name },
+};
+---
+<Page lang={lang} title={`${r.title[lang]} · ${site.name}`} description={r.intro[lang]} path={`recettes/${r.slug}/`} current="recettes">
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <PageBanner lang={lang} title={r.title[lang]} lead={r.intro[lang]} crumbs={[{ label: u.nav.recipes, href: localePath(lang, 'recettes/') }]}>
+    <p class="rv-meta">
+      <span><Icon name="clock" />{p.time} : {r.minutes} {p.minutes}</span>
+      <span><Icon name="users" />{p.servings} {r.servings} {p.people}</span>
+      <span><Icon name="gauge" />{p.level} : {levelLabel(lang, r.level)}</span>
+    </p>
+  </PageBanner>
+
+  <div class="container section-tight rv-grid">
+    <div class="rv-media" data-reveal>
+      {photo ? <img src={photo} alt={r.title[lang]} width="1200" height="900" decoding="async" /> : <FoodArt kind={r.art} label={r.title[lang]} />}
+    </div>
+    <section class="rv-ing card" aria-labelledby="rv-ing" data-reveal style="--reveal-delay: 80ms">
+      <h2 id="rv-ing">{p.ingredients}</h2>
+      <ul>{r.ingredients[lang].map((i) => <li><Icon name="check" />{i}</li>)}</ul>
+    </section>
+    <section class="rv-steps" aria-labelledby="rv-steps">
+      <h2 id="rv-steps">{p.steps}</h2>
+      <ol>{r.steps[lang].map((s, i) => <li data-reveal style={`--reveal-delay:${i * 60}ms`}><span class="rv-num" aria-hidden="true">{i + 1}</span><p>{s}</p></li>)}</ol>
+    </section>
+    <aside class="rv-product" aria-labelledby="rv-prod">
+      <h2 id="rv-prod">{p.product}</h2>
+      <ProductCard lang={lang} id={r.product} />
+    </aside>
+  </div>
+
+  <section class="container section-tight" aria-labelledby="rv-others">
+    <h2 id="rv-others" class="brand-title">{p.others}</h2>
+    <Carousel lang={lang} label={p.others} item="min(80%, 16rem)">
+      {others.map((o) => <li><RecipeCard lang={lang} recipe={o} /></li>)}
+    </Carousel>
+    <p style="text-align:center"><a class="text-link" href={localePath(lang, 'recettes/')}>{p.back}</a></p>
+  </section>
+</Page>
+<style>
+  .rv-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-block-start: var(--space-m); color: var(--milk); }
+  .rv-meta span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .rv-meta :global(svg) { inline-size: 1.2rem; block-size: 1.2rem; }
+  .rv-grid { display: grid; gap: var(--space-l); align-items: start; }
+  .rv-media { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-l); overflow: hidden; box-shadow: var(--shadow-card); }
+  .rv-media img, .rv-media :global(svg) { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .rv-ing { padding: var(--space-m) var(--space-m) var(--space-l); text-align: start; }
+  .rv-grid h2 { font-size: var(--step-2); font-weight: 600; color: var(--navy); margin-block-end: var(--space-s); }
+  :lang(ar) .rv-grid h2 { font-weight: 700; }
+  .rv-ing ul { display: grid; gap: 0.6rem; list-style: none; }
+  .rv-ing li { display: flex; gap: 0.6rem; align-items: flex-start; }
+  .rv-ing :global(svg) { flex: none; inline-size: 1.3rem; block-size: 1.3rem; margin-block-start: 0.2rem; color: var(--green); stroke-width: 2.4; }
+  .rv-steps ol { display: grid; gap: var(--space-m); list-style: none; }
+  .rv-steps li { display: flex; gap: 1rem; align-items: flex-start; }
+  .rv-num { flex: none; display: grid; place-items: center; inline-size: 2.4rem; block-size: 2.4rem; border-radius: 50%; background: var(--red); color: var(--milk); font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; }
+  .rv-steps p { margin: 0.35rem 0 0; font-size: var(--step-1); }
+  .rv-product { max-inline-size: 22rem; }
+  @media (min-width: 900px) {
+    .rv-grid { grid-template-columns: 1.3fr 1fr; }
+    .rv-steps { grid-column: 1; }
+    .rv-product { grid-column: 2; grid-row: 2; }
+  }
+</style>

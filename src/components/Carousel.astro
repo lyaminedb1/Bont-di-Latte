@@ -1,0 +1,18 @@
+---
+// Carrousel générique : défilement natif (doigt, trackpad, clavier) + flèches rouges.
+// Les enfants doivent être des <li>.
+import type { Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; label: string; item?: string; gap?: string; class?: string }
+const { lang, label, item, gap, class: cls } = Astro.props;
+const u = ui[lang].carousel;
+const style = [item && `--item:${item}`, gap && `--gap:${gap}`].filter(Boolean).join(';');
+---
+<div class:list={['carousel', cls]} data-carousel role="region" aria-roledescription="carrousel" aria-label={label}>
+  <button class="carousel-btn" data-dir="prev" type="button" aria-label={u.prev} disabled><Icon name="arrow" /></button>
+  <ul class="carousel-track" data-track style={style || undefined} tabindex="0">
+    <slot />
+  </ul>
+  <button class="carousel-btn" data-dir="next" type="button" aria-label={u.next}><Icon name="arrow" /></button>
+</div>

@@ -5,7 +5,21 @@ Bilingue français (`/`) et arabe (`/ar/`, mise en page miroir), statique, dépl
 
 - **Stack** : [Astro](https://astro.build) en sortie 100 % statique, CSS natif avec variables, ~2 Ko de JavaScript maison (aucune librairie côté client).
 - **Polices** : Bodoni Moda (titres), Work Sans (texte), Noto Naskh Arabic (arabe), via Google Fonts, chargées sans bloquer l'affichage.
-- **Mesures (Lighthouse mobile, en local)** : Performance 94–100 · Accessibilité 100 · Bonnes pratiques 100 · SEO 100, avec ou sans vidéos.
+- **Mesures (Lighthouse mobile, en local)** : Performance 99–100 · Accessibilité 100 · Bonnes pratiques 100 · SEO 100.
+
+### Structure du site (FR à `/`, AR à `/ar/`)
+
+Organisation inspirée des grands sites de marques fromagères : en-tête avec logo en médaillon et menus déroulants, recherche de recettes, carrousels et grand pied de page de liens. Textes, illustrations et identité sont propres à Bontà di Latte.
+
+| Page | Contenu |
+| --- | --- |
+| `/` | Recherche « Besoin d’inspiration ? », carrousel du héros (vidéo du logo, pros, recettes), encart pro rouge, carrousel de recettes, carrousel de produits, engagements, bande paysage + pied de page |
+| `/recettes/` | Recherche + filtres par catégorie (`?q=` et `?cat=` dans l’adresse) |
+| `/recettes/<recette>/` | Ingrédients, étapes, mozzarella utilisée, autres recettes (données structurées `Recipe`) |
+| `/produits/` et `/produits/<produit>/` | Gamme, fiche détaillée, recettes associées, boutons tarif pro et WhatsApp |
+| `/notre-histoire/` | Promesse (étiquette retournée) + savoir-faire en 4 étapes |
+| `/professionnels/` | Arguments + formulaire Netlify « demande-tarif » |
+| `/contact/`, `/mentions-legales/`, `/merci/` | Coordonnées, mentions légales, confirmation d’envoi |
 
 ---
 
@@ -48,12 +62,14 @@ Toutes les informations pratiques sont dans **`src/config/site.ts`**. Cherchez *
 | Conservation | `storage` | 0–4 °C |
 | Formats et poids des 3 produits | `products[].formats` | 125/250 g, 200 g / 1 kg, 1 kg / 2,5 kg |
 | Photos des produits (optionnel) | `products[].photo` | vide : illustrations dessinées |
-| Instagram / Facebook (vide = masqué) | `social` | vide |
+| Photos des recettes (optionnel) | `recipePhotos` | vide : illustrations dessinées |
+| Mentions légales (raison sociale, RC, NIF, responsable) | `legal` | valeurs fictives |
+| Instagram, Facebook, TikTok, YouTube (vide = masqué) | `social` | vide |
 
-Les **textes** (titres, descriptions, formulaire…) se trouvent dans `src/i18n/fr.ts` et `src/i18n/ar.ts`, qui ont la même structure.
+Les **textes** se trouvent dans `src/i18n/fr.ts` / `src/i18n/ar.ts` (sections promesse, savoir-faire, formulaire, contact) et dans `src/i18n/ui.ts` (en-tête, carrousels, pages). Les **recettes et fiches produits** (FR + AR) sont dans `src/data/catalog.ts` : pour ajouter une recette, copiez un bloc du tableau `recipes`. La page, la carte, le menu et le pied de page se mettent à jour tout seuls.
 Règle de contenu : ne jamais écrire « italienne », « italiana » ni « Made in Italy ». L'italien évoque le savoir-faire (*Caseificio*, *fatta a mano*, *mozzarella fresca*), pas l'origine.
 
-**Photos de produits** : déposez un fichier `.webp` d'environ 1200 × 900 px dans `public/img/produits/`, puis indiquez son chemin, par exemple `photo: '/img/produits/fior-di-latte.webp'`.
+**Photos** : déposez un fichier `.webp` d'environ 1200 × 900 px dans `public/img/produits/` ou `public/img/recettes/`, puis indiquez son chemin dans `site.ts`, par exemple `photo: '/img/produits/fior-di-latte.webp'`. Tant qu'aucune photo n'est fournie, le site affiche des illustrations dessinées « vue de dessus ».
 
 ---
 
@@ -77,14 +93,14 @@ Règle de contenu : ne jamais écrire « italienne », « italiana » ni « Made
    ```bash
    HERO_KBPS=1100 npm run videos
    ```
-3. Lancez `npm run build`. Le site **détecte automatiquement** les vidéos présentes, aucun code n'est à modifier. Sans vidéo, le héros affiche une animation CSS : une goutte tombe, l'onde se forme, puis le logo apparaît.
+3. Lancez `npm run build`. Le site **détecte automatiquement** les vidéos présentes, aucun code n'est à modifier. La vidéo du logo s'affiche dans la première diapositive du carrousel d'accueil. Sans vidéo, cette diapositive montre une animation CSS : une goutte tombe, l'onde se forme, puis le logo apparaît. `filage.mp4` s'affiche sur `/notre-histoire/`.
 4. Commitez le dossier `public/video/`. Les sources de `assets/video/` peuvent rester hors du dépôt si elles sont lourdes.
 
 Comportement intégré :
 - le mobile reçoit la version verticale, l'ordinateur la version horizontale (`<source media>`) ;
 - si l'utilisateur a demandé moins d'animations, ou si le mode économie de données est actif (`navigator.connection.saveData`), seul le poster s'affiche et aucune vidéo n'est téléchargée ;
 - les vidéos `filage` et `produit` ne se chargent qu'à l'approche de l'écran et se mettent en pause hors écran ;
-- le texte du héros n'est jamais posé sur le logo : la vidéo est au-dessus du texte sur mobile et à côté sur ordinateur, avec des bords fondus dans le bleu marine.
+- le texte n'est jamais posé sur la vidéo : elle occupe la moitié image de la diapositive, le texte est dans le panneau bleu.
 
 ---
 
@@ -92,7 +108,7 @@ Comportement intégré :
 
 1. Sur Netlify : **Add new site → Import an existing project → GitHub**, puis choisissez ce dépôt.
 2. Les réglages sont lus depuis `netlify.toml` : commande `npm run build`, dossier publié `dist`, Node 22.
-3. **Formulaires** : le formulaire « demande-tarif » est présent dans le HTML statique de `/` et `/ar/`. Netlify le détecte automatiquement au déploiement, avec l'attribut `data-netlify` et le champ piège anti-spam `bot-field`.
+3. **Formulaires** : le formulaire « demande-tarif » est présent dans le HTML statique de `/professionnels/` et `/ar/professionnels/`. Netlify le détecte automatiquement au déploiement, avec l'attribut `data-netlify` et le champ piège anti-spam `bot-field`.
    - Activez la détection dans *Site configuration → Forms*, si elle ne l'est pas déjà.
    - Ajoutez une notification par e-mail dans *Forms → Form notifications*.
    - Après envoi, le visiteur arrive sur `/merci/` ou `/ar/merci/`, deux pages non indexées.
@@ -113,18 +129,20 @@ assets/
 public/
   img/                               déclinaisons web des logos (générées)
   video/                             vidéos compressées + posters (npm run videos)
-  favicon.ico, icon-*.png, …         icônes (générées)
 scripts/
   build-images.mjs                   npm run images : logos → webp, favicon, OG
   compress-videos.sh                 npm run videos : ffmpeg
 src/
   config/site.ts                     ⚠ informations à compléter
-  i18n/fr.ts, ar.ts                  tous les textes
+  data/catalog.ts                    recettes et fiches produits (FR + AR)
+  i18n/fr.ts, ar.ts, ui.ts           textes
   styles/global.css                  charte (tokens de couleur, polices, boutons)
-  layouts/Base.astro                 <head> : meta, OG, hreflang, polices
-  components/                        une section = un composant
-  scripts/main.ts                    apparitions, défilement horizontal, vidéos
-  pages/                             /, /ar/, /merci/, /ar/merci/, robots.txt
+  styles/brand.css                   cartes, pilules, carrousels, bandeaux
+  layouts/Base.astro, Page.astro     <head> (meta, OG, hreflang) + gabarit commun
+  components/                        en-tête, carrousels, cartes, sections, illustrations
+  views/                             une vue par type de page (partagée FR/AR)
+  pages/                             routes FR et AR (fichiers très courts)
+  scripts/main.ts                    menu, carrousels, recherche, apparitions, vidéos
 ```
 
 Si les logos changent, remplacez `assets/img/logo-ovale.webp` et `assets/img/symbole.png` par des versions de même cadrage (fond transparent), puis lancez :

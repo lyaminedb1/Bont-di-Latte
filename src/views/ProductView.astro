@@ -1,0 +1,79 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import ProductArt from '../components/ProductArt.astro';
+import Icon from '../components/Icon.astro';
+import { t, localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site, whatsappLink } from '../config/site';
+import { productDetails, recipes, type ProductId } from '../data/catalog';
+interface Props { lang: Lang; id: ProductId }
+const { lang, id } = Astro.props;
+const u = ui[lang];
+const p = u.pages.product;
+const prod = site.products.find((x) => x.id === id)!;
+const det = productDetails[id];
+const linked = recipes.filter((r) => r.product === id);
+const sep = lang === 'ar' ? '، ' : ', ';
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: prod.name,
+  description: det.long[lang],
+  brand: { '@type': 'Brand', name: site.name },
+  category: 'Mozzarella',
+};
+---
+<Page lang={lang} title={`${prod.name} · ${site.name}`} description={det.short[lang]} path={`produits/${id}/`} current="produits">
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <PageBanner lang={lang} title={prod.name} lead={det.tagline[lang]} crumbs={[{ label: u.nav.products, href: localePath(lang, 'produits/') }]} />
+  <div class="container section-tight pd-grid">
+    <div class="pd-media" data-reveal>
+      {prod.photo ? <img src={prod.photo} alt={det.alt[lang]} width="1200" height="900" decoding="async" /> : <ProductArt kind={prod.illustration} label={det.alt[lang]} />}
+    </div>
+    <div class="pd-info" data-reveal style="--reveal-delay: 80ms">
+      <p class="pd-long">{det.long[lang]}</p>
+      <dl class="pd-facts">
+        <div><dt>{p.formats}</dt><dd><ul class="pd-chips">{prod.formats[lang].map((f) => <li>{f}</li>)}</ul></dd></div>
+        <div><dt>{p.audience}</dt><dd>{det.audience[lang]}</dd></div>
+        <div><dt>{p.uses}</dt><dd><ul class="pd-uses">{det.uses[lang].map((x) => <li><Icon name="check" />{x}</li>)}</ul></dd></div>
+        <div><dt>{p.ingredients}</dt><dd>{site.ingredients[lang].join(sep)}.</dd></div>
+        <div><dt>{p.storage}</dt><dd><Icon name="snow" class="pd-snow" />{site.storage[lang]}</dd></div>
+      </dl>
+      <div class="pd-ctas">
+        <a class="pill pill--red pill--lg" href={localePath(lang, 'professionnels/')}>{p.proCta}</a>
+        <a class="pill pill--green pill--lg" href={whatsappLink(p.whatsappMessage + prod.name + (lang === 'ar' ? '؟' : ' ?'))} target="_blank" rel="noopener">
+          <Icon name="whatsapp" />{p.whatsappCta}<span class="sr-only"> {t(lang).a11y.newTab}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  {linked.length > 0 && (
+    <section class="container section-tight" aria-labelledby="pd-rec">
+      <h2 id="pd-rec" class="brand-title">{p.recipes}</h2>
+      <ul class="pd-recipes">{linked.map((r) => <li><RecipeCard lang={lang} recipe={r} /></li>)}</ul>
+      <p style="text-align:center"><a class="text-link" href={localePath(lang, 'produits/')}>{p.back}</a></p>
+    </section>
+  )}
+</Page>
+<style>
+  .pd-grid { display: grid; gap: var(--space-l); align-items: start; }
+  @media (min-width: 900px) { .pd-grid { grid-template-columns: 1fr 1.1fr; gap: var(--space-xl); } }
+  .pd-media { display: grid; place-items: center; padding: var(--space-l); aspect-ratio: 4 / 3; background: var(--cream); border-radius: var(--radius-l); }
+  .pd-media img { inline-size: 100%; block-size: 100%; object-fit: contain; }
+  .pd-long { font-size: var(--step-1); line-height: 1.6; }
+  .pd-facts { display: grid; margin: var(--space-m) 0; }
+  .pd-facts > div { display: grid; gap: 0.3rem; padding-block: var(--space-s); border-block-start: 1px solid var(--line); }
+  @media (min-width: 560px) { .pd-facts > div { grid-template-columns: 9rem 1fr; gap: var(--space-m); } }
+  .pd-facts dt { font-weight: 700; color: var(--navy-deep); }
+  .pd-facts dd { margin: 0; }
+  .pd-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; }
+  .pd-chips li { padding: 0.2rem 0.75rem; border-radius: 999px; background: var(--cream); color: var(--navy); font-weight: 500; }
+  .pd-uses { display: grid; gap: 0.35rem; list-style: none; }
+  .pd-uses li { display: flex; gap: 0.5rem; }
+  .pd-uses :global(svg) { flex: none; inline-size: 1.2rem; block-size: 1.2rem; margin-block-start: 0.2rem; color: var(--green); stroke-width: 2.4; }
+  .pd-facts :global(.pd-snow) { display: inline; inline-size: 1.1rem; block-size: 1.1rem; vertical-align: -0.2em; margin-inline-end: 0.35rem; color: var(--navy); }
+  .pd-ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .pd-recipes { display: grid; gap: var(--space-m); list-style: none; margin-block: var(--space-m); grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+</style>

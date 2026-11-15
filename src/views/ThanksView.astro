@@ -1,0 +1,31 @@
+---
+import Page from '../layouts/Page.astro';
+import Icon from '../components/Icon.astro';
+import { t, localePath, type Lang } from '../i18n';
+import { whatsappLink } from '../config/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const all = t(lang);
+const d = all.thanks;
+---
+<Page lang={lang} title={d.metaTitle} description={d.text} path="merci/" noindex>
+  <section class="thanks container">
+    <img src="/img/symbole-192.webp" width="96" height="96" alt="" class="thanks-symbol" />
+    <h1>{d.title}<span aria-hidden="true">.</span></h1>
+    <p class="lead">{d.text}</p>
+    <div class="thanks-ctas">
+      <a class="pill pill--lg" href={localePath(lang)}>{d.back}</a>
+      <a class="pill pill--green pill--lg" href={whatsappLink(all.pro.whatsappMessage)} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />{d.whatsapp}<span class="sr-only"> {all.a11y.newTab}</span>
+      </a>
+    </div>
+  </section>
+</Page>
+<style>
+  .thanks { display: grid; justify-items: center; gap: var(--space-m); max-inline-size: 44rem; padding-block: var(--space-2xl) var(--space-l); text-align: center; }
+  .thanks-symbol { inline-size: 6rem; block-size: 6rem; animation: settle 0.9s var(--ease-out) both; }
+  .thanks h1 { font-size: var(--step-4); color: var(--navy-deep); }
+  .thanks .lead { margin-inline: auto; }
+  .thanks-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  @keyframes settle { from { opacity: 0; transform: translateY(-24px) scale(0.9); } to { opacity: 1; transform: none; } }
+</style>

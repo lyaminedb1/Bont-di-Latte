@@ -1,0 +1,14 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import Pro from '../components/Pro.astro';
+import { type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = ui[lang].pages.pro;
+---
+<Page lang={lang} title={p.meta} description={p.lead} path="professionnels/" current="pro">
+  <PageBanner lang={lang} title={p.title} lead={p.lead} art="pizza" />
+  <Pro lang={lang} />
+</Page>

@@ -1,0 +1,16 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import Promise from '../components/Promise.astro';
+import Craft from '../components/Craft.astro';
+import { type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = ui[lang].pages.story;
+---
+<Page lang={lang} title={p.meta} description={p.lead} path="notre-histoire/" current="histoire">
+  <PageBanner lang={lang} title={p.title} lead={p.lead} />
+  <Promise lang={lang} />
+  <Craft lang={lang} />
+</Page>

@@ -1,0 +1,24 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Promise from '../components/Promise.astro';
+import { type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site } from '../config/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = ui[lang].pages.products;
+---
+<Page lang={lang} title={p.meta} description={p.lead} path="produits/" current="produits">
+  <PageBanner lang={lang} title={p.title} lead={p.lead} />
+  <section class="container section-tight">
+    <ul class="pv-grid">
+      {site.products.map((x, i) => <li data-reveal style={`--reveal-delay:${i * 80}ms`}><ProductCard lang={lang} id={x.id} headingLevel="h2" /></li>)}
+    </ul>
+  </section>
+  <Promise lang={lang} />
+</Page>
+<style>
+  .pv-grid { display: grid; gap: var(--space-l); list-style: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+</style>

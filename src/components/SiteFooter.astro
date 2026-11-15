@@ -1,0 +1,144 @@
+---
+import { t, localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site, whatsappLink } from '../config/site';
+import { categories, recipes } from '../data/catalog';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const u = ui[lang];
+const L = (p = '') => localePath(lang, p);
+const year = new Date().getFullYear();
+const socials = (Object.entries(site.social) as [keyof typeof site.social, string][]).filter(([, url]) => url);
+const pathNoLang = Astro.url.pathname.replace(/^\/ar(\/|$)/, '/');
+const otherHref = lang === 'fr' ? `/ar${pathNoLang}` : pathNoLang;
+---
+
+<!-- Bande paysage : la campagne laitière, qui se fond dans le pied de page par une vague -->
+<div class="band" role="img" aria-label={u.band.alt}>
+  <svg viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E4EAF2" /><stop offset="1" stop-color="#F7F0E6" /></linearGradient>
+    </defs>
+    <rect width="1440" height="360" fill="url(#sky)" />
+    <circle cx="1120" cy="92" r="46" fill="#F7F0E6" />
+    <circle cx="1120" cy="92" r="64" fill="#F7F0E6" opacity=".45" />
+    <path d="M0 196C160 150 300 170 420 158S700 112 860 136 1160 150 1440 120V360H0Z" fill="#AFC0D5" />
+    <path d="M0 236C200 200 360 214 520 196S820 170 980 190 1260 214 1440 180V360H0Z" fill="#7E97B8" />
+    <g fill="#5C7AA2">
+      <rect x="590" y="160" width="58" height="34" />
+      <path d="M582 162 619 138 656 162Z" fill="#C8322B" opacity=".75" />
+      <rect x="610" y="176" width="12" height="18" fill="#F7F0E6" />
+      <rect x="660" y="172" width="34" height="22" />
+    </g>
+    <path d="M0 276C220 246 420 262 640 244S1020 226 1200 248 1360 262 1440 250V360H0Z" fill="#4E6E99" />
+    <g fill="#2F527F">
+      {[[120, 252], [196, 246], [880, 236], [960, 232], [1290, 246], [1360, 250]].map(([x, y]) => (
+        <g transform={`translate(${x} ${y})`}>
+          <rect x="-3" y="0" width="6" height="22" fill="#2B3F5C" />
+          <circle cx="0" cy="-8" r="18" /><circle cx="-14" cy="0" r="13" /><circle cx="14" cy="-2" r="14" />
+        </g>
+      ))}
+    </g>
+    <g fill="#F7F0E6">
+      <ellipse cx="760" cy="268" rx="16" ry="8" /><rect x="748" y="270" width="3" height="9" /><rect x="768" y="270" width="3" height="9" /><circle cx="777" cy="263" r="5" />
+      <ellipse cx="820" cy="276" rx="14" ry="7" /><rect x="810" y="278" width="3" height="8" /><rect x="826" y="278" width="3" height="8" /><circle cx="834" cy="272" r="4.5" />
+    </g>
+    <path d="M0 312C240 290 480 300 720 292S1200 286 1440 296V360H0Z" fill="#3A5D8C" />
+    <path d="M0 330C180 352 360 360 720 338S1260 316 1440 340V360H0Z" fill="#142E52" />
+  </svg>
+  <p class="band-title" aria-hidden="true">{u.band.title}</p>
+</div>
+
+<footer class="sf on-dark">
+  <div class="container sf-inner">
+    <ul class="sf-social" aria-label={u.footer.social}>
+      <li><a href={whatsappLink(d.contact.whatsappMessage)} target="_blank" rel="noopener"><Icon name="whatsapp" /><span class="sr-only">WhatsApp {d.a11y.newTab}</span></a></li>
+      <li><a href={`tel:${site.contact.phoneHref}`}><Icon name="phone" /><span class="sr-only">{d.contact.phone}</span></a></li>
+      {socials.map(([name, url]) => (
+        <li><a href={url} target="_blank" rel="noopener"><Icon name={name} /><span class="sr-only">{name} {d.a11y.newTab}</span></a></li>
+      ))}
+    </ul>
+
+    <h2 class="sf-title">{u.footer.recipes}</h2>
+    <div class="sf-cols">
+      {categories.map((c) => {
+        const list = recipes.filter((r) => r.category === c.id);
+        return (
+          <div class="sf-col">
+            <h3><a href={`${L('recettes/')}?cat=${c.id}`}>{c.label[lang]}</a></h3>
+            <ul>{list.map((r) => <li><a href={L(`recettes/${r.slug}/`)}>{r.title[lang]}</a></li>)}</ul>
+          </div>
+        );
+      })}
+    </div>
+
+    <h2 class="sf-title">{u.footer.products}</h2>
+    <ul class="sf-inline">
+      {site.products.map((p) => <li><a href={L(`produits/${p.id}/`)} lang="it">{p.name}</a></li>)}
+    </ul>
+
+    <nav class="sf-legal" aria-label={u.footer.legal}>
+      <ul>
+        <li><a href={L('notre-histoire/')}>{u.nav.story}</a></li>
+        <li><a href={L('professionnels/')}>{u.nav.pro}</a></li>
+        <li><a href={L('contact/')}>{u.nav.contact}</a></li>
+        <li><a href={L('mentions-legales/')}>{u.footer.legal}</a></li>
+        <li><a href="/sitemap-index.xml">Sitemap</a></li>
+        <li><a href={otherHref} hreflang={d.switcher.otherLang} lang={d.switcher.otherLang} class="sf-lang">{d.switcher.otherLabel}</a></li>
+      </ul>
+    </nav>
+
+    <div class="sf-bottom">
+      <img src="/img/logo-ovale-480.webp" width="480" height="221" alt={site.name} loading="lazy" decoding="async" />
+      <p>{u.footer.tagline}</p>
+      <p class="sf-copy">© {year} <span class="brand-word">{site.name}</span> · {u.footer.rights} · {u.footer.made}</p>
+    </div>
+  </div>
+  <div class="tricolore" aria-hidden="true"><span></span><span></span><span></span></div>
+</footer>
+
+<style>
+  .band { position: relative; block-size: clamp(9rem, 22vw, 20rem); margin-block: var(--space-xl) -2px; overflow: hidden; }
+  .band svg { inline-size: 100%; block-size: 100%; }
+  .band-title {
+    position: absolute; inset-inline: 0; inset-block-start: 14%; margin: 0;
+    font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; font-size: var(--step-2); color: var(--navy-deep);
+    text-align: center; padding-inline: var(--gutter);
+  }
+  :lang(ar) .band-title { font-family: var(--font-arabic); font-style: normal; font-weight: 600; }
+  @media (max-width: 639.98px) { .band-title { font-size: var(--step-0); inset-block-start: 8%; } }
+
+  .sf { background: var(--navy-deep); color: var(--milk); padding-block-end: env(safe-area-inset-bottom); }
+  .sf-inner { display: grid; justify-items: center; gap: var(--space-m); padding-block: var(--space-m) var(--space-xl); text-align: center; }
+  .sf a { color: var(--milk); text-decoration: none; }
+  @media (hover: hover) { .sf a:hover { text-decoration: underline; text-underline-offset: 0.2em; } }
+
+  .sf-social { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; list-style: none; margin-block-end: var(--space-s); }
+  .sf-social a { display: grid; place-items: center; inline-size: 3rem; block-size: 3rem; border-radius: 50%; border: 1.5px solid rgb(247 240 230 / 0.5); transition: background-color 0.25s, color 0.25s; }
+  .sf-social a :global(svg) { inline-size: 1.5rem; block-size: 1.5rem; }
+  @media (hover: hover) { .sf-social a:hover { background: var(--milk); color: var(--navy-deep); text-decoration: none; } }
+
+  .sf-title { font-size: var(--step-3); font-weight: 600; margin-block-start: var(--space-s); }
+  :lang(ar) .sf-title { font-weight: 700; }
+  .sf-cols { display: grid; gap: var(--space-m) var(--space-l); inline-size: 100%; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+  .sf-col h3 { font-family: 'Bodoni Moda', Georgia, serif; font-size: var(--step-0); font-weight: 700; margin-block-end: 0.35rem; }
+  :lang(ar) .sf-col h3 { font-family: var(--font-arabic); }
+  .sf-col ul, .sf-inline, .sf-legal ul { list-style: none; }
+  .sf-col li a { display: inline-block; padding-block: 0.3rem; color: var(--mist); font-size: 0.95rem; }
+  .sf-inline { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 1.5rem; }
+  .sf-inline a { display: inline-block; padding-block: 0.4rem; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; }
+  .sf-legal { margin-block-start: var(--space-m); padding-block-start: var(--space-m); border-block-start: 1px solid var(--line-dark); inline-size: 100%; }
+  .sf-legal ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 1.5rem; }
+  .sf-legal a { display: inline-block; padding-block: 0.4rem; font-size: 0.92rem; color: var(--mist); }
+  .sf-legal .sf-lang { color: var(--milk); font-weight: 600; }
+  .sf-lang:lang(ar) { font-family: var(--font-arabic); font-size: 1rem; }
+  .sf-lang:lang(fr) { font-family: 'Work Sans', system-ui, sans-serif; }
+  .sf-bottom { display: grid; justify-items: center; gap: 0.5rem; margin-block-start: var(--space-s); color: var(--mist); }
+  .sf-bottom img { inline-size: 10rem; block-size: auto; }
+  .sf-bottom p { margin: 0; }
+  .sf-copy { font-size: 0.85rem; }
+  :lang(ar) .sf-copy { font-size: 0.95rem; }
+  @media (max-width: 1023.98px) { .sf { padding-block-end: calc(5rem + env(safe-area-inset-bottom)); } }
+</style>

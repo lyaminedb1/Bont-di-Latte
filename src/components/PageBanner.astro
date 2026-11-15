@@ -1,0 +1,42 @@
+---
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import type { FoodArtKind } from '../data/catalog';
+import FoodArt from './FoodArt.astro';
+interface Props { lang: Lang; title: string; lead?: string; crumbs?: { label: string; href?: string }[]; art?: FoodArtKind }
+const { lang, title, lead, crumbs = [], art } = Astro.props;
+const u = ui[lang];
+const items = [{ label: u.home, href: localePath(lang) }, ...crumbs, { label: title }];
+const base = Astro.site ? Astro.site.href.replace(/\/$/, '') : '';
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, ...(c.href ? { item: base + c.href } : {}) })),
+};
+---
+<section class="page-banner on-dark">
+  <div class:list={['container', 'pbn-inner', { 'has-art': art }]}>
+    <div>
+      <nav class="breadcrumb" aria-label={lang === 'ar' ? 'مسار التنقل' : 'Fil d’Ariane'}>
+        <ol>
+          {items.map((c, i) => (
+            <li>{c.href && i < items.length - 1 ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>
+          ))}
+        </ol>
+      </nav>
+      <h1>{title}</h1>
+      {lead && <p class="lead">{lead}</p>}
+      <slot />
+    </div>
+    {art && <div class="pbn-art" aria-hidden="true"><FoodArt kind={art} bg="none" slice={false} /></div>}
+  </div>
+  <div class="tricolore" aria-hidden="true"><span></span><span></span><span></span></div>
+</section>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<style>
+  .page-banner { padding-block: var(--space-xl); }
+  .pbn-inner { display: grid; gap: var(--space-l); align-items: center; }
+  .pbn-art { inline-size: min(100%, 22rem); justify-self: center; aspect-ratio: 4 / 3; filter: drop-shadow(0 18px 30px rgb(0 0 0 / 0.3)); }
+  @media (min-width: 900px) { .pbn-inner.has-art { grid-template-columns: 1.4fr 1fr; } .pbn-art { inline-size: 100%; } }
+  @media (max-width: 639.98px) { .pbn-art { inline-size: 70%; } }
+</style>

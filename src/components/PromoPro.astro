@@ -1,0 +1,53 @@
+---
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import FoodArt from './FoodArt.astro';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = ui[lang].promo;
+---
+<section class="promo container section-tight" aria-labelledby="promo-title">
+  <div class="promo-card" data-reveal>
+    <h2 id="promo-title">{u.title}</h2>
+    <p>{u.text}</p>
+    <a class="pill pill--milk pill--lg" href={localePath(lang, 'professionnels/')}>{u.cta}<Icon name="arrow" /></a>
+  </div>
+  <div class="promo-media" data-reveal style="--reveal-delay: 100ms">
+    <FoodArt kind="pizza" bg="navy" label={u.alt} />
+  </div>
+</section>
+<style>
+  .promo { display: grid; align-items: center; }
+  .promo-media { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-l); overflow: hidden; box-shadow: var(--shadow-card); }
+  .promo-card {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-s);
+    padding: var(--space-l) var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--red);
+    color: var(--milk);
+    text-align: center;
+    box-shadow: 0 24px 40px -24px rgb(120 20 15 / 0.7);
+  }
+  .promo-card h2 { font-size: var(--step-2); font-weight: 600; line-height: 1.2; }
+  :lang(ar) .promo-card h2 { font-weight: 700; }
+  .promo-card p { margin: 0 0 0.5rem; max-inline-size: 28rem; }
+  .promo-card :global(.pill) { --pill-fg: #8f1f19; }
+  :global([dir='rtl']) .promo-card :global(.icon-arrow) { transform: scaleX(-1); }
+  .promo-card :global(:focus-visible) { outline-color: var(--milk); }
+
+  @media (max-width: 899.98px) {
+    .promo { grid-template-areas: 'media' 'card'; }
+    .promo-media { grid-area: media; }
+    .promo-card { grid-area: card; margin: -3rem 1rem 0; }
+  }
+  @media (min-width: 900px) {
+    .promo { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr); }
+    .promo-card { grid-column: 1; grid-row: 1; margin-inline-end: -5rem; padding: var(--space-xl) var(--space-l); }
+    .promo-media { grid-column: 2; grid-row: 1; aspect-ratio: 16 / 11; }
+  }
+</style>

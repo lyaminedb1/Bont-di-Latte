@@ -1,0 +1,42 @@
+---
+import { localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { site } from '../config/site';
+import { productDetails, type ProductId } from '../data/catalog';
+import ProductArt from './ProductArt.astro';
+interface Props { lang: Lang; id: ProductId; headingLevel?: 'h2' | 'h3' }
+const { lang, id, headingLevel = 'h3' } = Astro.props;
+const u = ui[lang];
+const p = site.products.find((x) => x.id === id)!;
+const det = productDetails[id];
+const H = headingLevel;
+---
+<article class="card pcard">
+  <div class="pcard-media">
+    {p.photo
+      ? <img src={p.photo} alt="" width="800" height="600" loading="lazy" decoding="async" />
+      : <ProductArt kind={p.illustration} label={det.alt[lang]} />}
+  </div>
+  <div class="pcard-body">
+    <p class="pcard-tag">{det.tagline[lang]}</p>
+    <H class="pcard-title" lang="it"><a class="card-link" href={localePath(lang, `produits/${id}/`)}>{p.name}</a></H>
+    <p class="pcard-text">{det.short[lang]}</p>
+    <p class="pcard-formats">{p.formats[lang].join(' · ')}</p>
+    <span class="pill pcard-pill" aria-hidden="true">{u.productsBlock.cta}</span>
+  </div>
+</article>
+<style>
+  .pcard { block-size: 100%; }
+  .pcard-media { display: grid; place-items: center; aspect-ratio: 4 / 3; padding: 1rem 1.5rem 0; }
+  .pcard-media img { inline-size: 100%; block-size: 100%; object-fit: contain; }
+  .pcard-media :global(svg) { transition: transform 0.6s var(--ease-out); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) { .pcard:hover .pcard-media :global(svg) { transform: scale(1.05) translateY(-4px); } }
+  .pcard-body { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem 1.5rem; }
+  .pcard-tag { margin: 0; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  :lang(ar) .pcard-tag { letter-spacing: 0; font-size: 0.9rem; }
+  .pcard-title { font-family: 'Bodoni Moda', Georgia, serif; font-size: var(--step-2); font-style: italic; font-weight: 600; color: var(--navy); line-height: 1.1; }
+  .pcard-text { margin: 0; color: var(--navy); font-size: 0.95rem; }
+  .pcard-formats { margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
+  :lang(ar) .pcard-formats { font-size: 0.95rem; }
+  .pcard-pill { margin-block-start: auto; }
+</style>

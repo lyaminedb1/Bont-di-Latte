@@ -1,0 +1,91 @@
+---
+import { t, localePath, type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import HeroMedia from './HeroMedia.astro';
+import FoodArt from './FoodArt.astro';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = ui[lang];
+const L = (p = '') => localePath(lang, p);
+const hrefs = [L('produits/'), L('professionnels/'), L('recettes/')];
+const n = u.slides.length;
+---
+
+<section class="hc" aria-roledescription="carrousel" aria-label={u.carousel.label} data-hc>
+  <div class="hc-track" data-hc-track>
+    {u.slides.map((s, i) => {
+      const Heading = i === 0 ? 'h1' : 'h2';
+      return (
+        <article class="hc-slide" id={`diapo-${i + 1}`} aria-roledescription="diapositive" aria-label={`${i + 1} ${u.carousel.of} ${n}`}>
+          <div class="hc-media">
+            {i === 0 && <HeroMedia label={t(lang).hero.videoLabel} />}
+            {i === 1 && <FoodArt kind="pizza" bg="navy" />}
+            {i === 2 && <FoodArt kind="chakchouka" bg="cream" />}
+          </div>
+          <div class="hc-panel on-dark">
+            <p class="hc-kicker">{s.kicker}</p>
+            <Heading class="hc-title">{s.titleBefore}<em>{s.titleEm}</em>{s.titleAfter}</Heading>
+            <p class="hc-text">{s.text}</p>
+            <a class="pill pill--milk pill--lg" href={hrefs[i]} tabindex={i === 0 ? undefined : '-1'} data-hc-link>{s.cta}<Icon name="arrow" /></a>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+  <div class="hc-dots" role="group" aria-label={u.carousel.label}>
+    {u.slides.map((_, i) => (
+      <button type="button" class="hc-dot" data-hc-dot={i} aria-label={`${u.carousel.goTo} ${i + 1}`} aria-current={i === 0 ? 'true' : undefined}></button>
+    ))}
+  </div>
+</section>
+<div class="tricolore hc-filet" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<style>
+  .hc { position: relative; background: var(--navy-deep); }
+  .hc-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .hc-track::-webkit-scrollbar { display: none; }
+  .hc-slide { display: grid; scroll-snap-align: start; scroll-snap-stop: always; }
+  .hc-media { position: relative; aspect-ratio: 5 / 4; overflow: hidden; background: var(--navy-deep); }
+  .hc-media > :global(svg) { position: absolute; inset: 0; }
+  .hc-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-s);
+    padding: var(--space-l) var(--gutter) calc(var(--space-l) + 1.75rem);
+    background: var(--navy);
+    color: var(--milk);
+    text-align: center;
+  }
+  .hc-kicker { margin: 0; font-size: var(--step--1); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mist); }
+  :lang(ar) .hc-kicker { letter-spacing: 0; font-size: var(--step-0); }
+  .hc-title { font-size: var(--step-4); font-weight: 600; line-height: 1.05; max-inline-size: 16ch; }
+  :lang(ar) .hc-title { line-height: 1.35; font-weight: 700; }
+  .hc-title em { font-weight: 500; }
+  .hc-text { max-inline-size: 30rem; margin: 0 0 0.5rem; color: var(--mist); }
+
+  .hc-dots { position: absolute; inset-inline: 0; inset-block-end: 1rem; display: flex; justify-content: center; gap: 0.25rem; }
+  .hc-dot { inline-size: 1.75rem; block-size: 1.75rem; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+  .hc-dot::before { content: ''; inline-size: 0.6rem; block-size: 0.6rem; border-radius: 50%; background: rgb(247 240 230 / 0.45); transition: background-color 0.25s, transform 0.25s; }
+  .hc-dot[aria-current='true']::before { background: var(--milk); transform: scale(1.25); }
+  .hc-dot:focus-visible { outline-color: var(--milk); }
+  :global(html:not(.js)) .hc-dots { display: none; }
+
+  @media (min-width: 900px) {
+    .hc-slide { grid-template-columns: 1fr 1fr; min-block-size: clamp(26rem, 38vw, 34rem); }
+    .hc-media { aspect-ratio: auto; }
+    .hc-panel { padding-inline: clamp(2rem, 5vw, 5rem); }
+    .hc-dots { inset-inline: 50% 0; }
+  }
+  .hc-filet { block-size: 5px; }
+</style>

@@ -1,0 +1,173 @@
+---
+// Illustrations « vue de dessus » des recettes, dessinées pour le site (aucune image de banque).
+// Remplacées automatiquement par une photo si elle est renseignée dans src/config/site.ts.
+import type { FoodArtKind } from '../data/catalog';
+interface Props { kind: FoodArtKind; label?: string; bg?: 'cream' | 'navy' | 'milk' | 'none'; class?: string; slice?: boolean }
+const { kind, label, bg = 'cream', class: cls, slice = true } = Astro.props;
+
+const BG = { cream: '#EFE3D0', navy: '#1C3F6E', milk: '#F7F0E6', none: 'none' }[bg];
+const C = {
+  red: '#C8322B', red2: '#DA4A40', milk: '#F7F0E6', paper: '#FBF7F0', line: '#E4D5BE',
+  green: '#1E7B4A', green2: '#2E9A5F', crust: '#D99B55', crust2: '#B87A3A', pasta: '#E9C17A', pasta2: '#C99A4A', ink: '#2B211B',
+};
+
+// Générateur pseudo-aléatoire déterministe : le dessin est identique à chaque build.
+let seed = [...kind].reduce((a, c) => a + c.charCodeAt(0), 7);
+const rnd = () => {
+  seed = (seed + 0x6d2b79f5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const inDisc = (cx: number, cy: number, r: number) => {
+  const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * r;
+  return [cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.92];
+};
+const leaf = 'M0 0C8-11 26-11 34 0C26 11 8 11 0 0Z';
+const leaves = (n: number, cx: number, cy: number, r: number, s = 1) =>
+  Array.from({ length: n }, () => { const [x, y] = inDisc(cx, cy, r); return { x, y, a: rnd() * 360, s: s * (0.8 + rnd() * 0.5) }; });
+const blobs = (n: number, cx: number, cy: number, r: number, size: number) =>
+  Array.from({ length: n }, () => { const [x, y] = inDisc(cx, cy, r); return { x, y, r: size * (0.7 + rnd() * 0.6), rx: 1 + rnd() * 0.35, a: rnd() * 180 }; });
+
+// Caprese : tranches alternées en couronne
+const capreseSlices = Array.from({ length: 12 }, (_, i) => {
+  const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+  return { x: 200 + Math.cos(a) * 100, y: 150 + Math.sin(a) * 64, tomato: i % 2 === 0 };
+});
+const penne = Array.from({ length: 24 }, () => { const [x, y] = inDisc(200, 150, 80); return { x, y, a: rnd() * 180 }; });
+const fusilli = Array.from({ length: 20 }, () => { const [x, y] = inDisc(200, 150, 82); return { x, y, a: rnd() * 180 }; });
+const tomatoesHalf = Array.from({ length: 9 }, () => { const [x, y] = inDisc(200, 150, 80); return { x, y }; });
+const bocc = Array.from({ length: 8 }, () => { const [x, y] = inDisc(200, 150, 80); return { x, y }; });
+const olives = Array.from({ length: 6 }, () => { const [x, y] = inDisc(200, 150, 85); return { x, y, a: rnd() * 180 }; });
+const peppers = Array.from({ length: 12 }, (_, i) => { const [x, y] = inDisc(200, 150, 78); return { x, y, a: rnd() * 360, c: i % 3 === 0 ? '#E0533F' : C.green2 }; });
+const eggs = [[150, 112], [252, 118], [160, 196], [248, 192]];
+const bread = [{ x: 105, y: 160, a: -14 }, { x: 205, y: 140, a: 5 }, { x: 302, y: 162, a: 16 }];
+const cubes = bread.flatMap((b) => Array.from({ length: 9 }, () => ({ x: b.x - 30 + rnd() * 60, y: b.y - 24 + rnd() * 44, a: rnd() * 90, red: rnd() > 0.45 })));
+---
+<svg class:list={['food-art', cls]} viewBox="0 0 400 300" preserveAspectRatio={slice ? 'xMidYMid slice' : 'xMidYMid meet'}
+  role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  {BG !== 'none' && <rect width="400" height="300" fill={BG} />}
+
+  {kind === 'caprese' && (
+    <g>
+      <ellipse cx="200" cy="156" rx="172" ry="124" fill="#000" opacity=".08" />
+      <ellipse cx="200" cy="150" rx="170" ry="122" fill={C.paper} stroke={C.line} stroke-width="2" />
+      <ellipse cx="200" cy="150" rx="146" ry="100" fill="none" stroke={C.line} stroke-width="1.5" />
+      {capreseSlices.map((s) => s.tomato ? (
+        <g transform={`translate(${s.x} ${s.y})`}>
+          <circle r="31" fill={C.red} />
+          <circle r="24" fill={C.red2} />
+          {[0, 1, 2, 3].map((k) => <ellipse cx={Math.cos(k * 1.57) * 12} cy={Math.sin(k * 1.57) * 12} rx="6" ry="3.5" transform={`rotate(${k * 90} ${Math.cos(k * 1.57) * 12} ${Math.sin(k * 1.57) * 12})`} fill="#F2B27A" opacity=".85" />)}
+          <circle r="5" fill="#E86A5E" />
+        </g>
+      ) : (
+        <g transform={`translate(${s.x} ${s.y})`}>
+          <circle r="32" fill={C.milk} stroke={C.line} stroke-width="1.5" />
+          <path d="M-18-14a24 24 0 0 1 22-8" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" />
+        </g>
+      ))}
+      {leaves(3, 200, 150, 30, 1.3).map((l) => <g transform={`translate(${l.x} ${l.y}) rotate(${l.a}) scale(${l.s})`}><path d={leaf} fill={C.green} /><path d="M3 0H30" stroke={C.green2} stroke-width="1.2" /></g>)}
+      {capreseSlices.filter((_, i) => i % 3 === 1).map((s) => <g transform={`translate(${s.x + 8} ${s.y - 22}) rotate(${(s.x * 7) % 360}) scale(.75)`}><path d={leaf} fill={C.green} /><path d="M3 0H30" stroke={C.green2} stroke-width="1.2" /></g>)}
+      <path d="M120 120c30 20 60-10 90 6s50 22 80 0" fill="none" stroke="#D9B44A" stroke-width="3" stroke-linecap="round" opacity=".55" />
+    </g>
+  )}
+
+  {kind === 'pizza' && (
+    <g>
+      <circle cx="204" cy="158" r="132" fill="#000" opacity=".12" />
+      <circle cx="200" cy="150" r="132" fill={C.crust} />
+      {Array.from({ length: 16 }, (_, i) => <ellipse cx={200 + Math.cos(i * 0.39) * 124} cy={150 + Math.sin(i * 0.39) * 124} rx="7" ry="4" transform={`rotate(${i * 22} ${200 + Math.cos(i * 0.39) * 124} ${150 + Math.sin(i * 0.39) * 124})`} fill={C.crust2} opacity=".7" />)}
+      <circle cx="200" cy="150" r="112" fill={C.red} />
+      {blobs(14, 200, 150, 100, 4).map((b) => <circle cx={b.x} cy={b.y} r={b.r} fill="#A92820" opacity=".5" />)}
+      {blobs(11, 200, 150, 84, 20).map((b) => (
+        <g transform={`translate(${b.x} ${b.y}) rotate(${b.a})`}>
+          <ellipse rx={b.r * b.rx} ry={b.r} fill={C.milk} />
+          <ellipse cx={b.r * 0.3} cy={-b.r * 0.2} rx={b.r * 0.25} ry={b.r * 0.18} fill="#EBCB92" opacity=".8" />
+        </g>
+      ))}
+      {leaves(5, 200, 150, 80, 1.1).map((l) => <g transform={`translate(${l.x} ${l.y}) rotate(${l.a}) scale(${l.s})`}><path d={leaf} fill={C.green} /><path d="M3 0H30" stroke={C.green2} stroke-width="1.2" /></g>)}
+      <path d="M200 20V280M88 85l224 130M88 215l224-130" stroke="#7a2a12" stroke-width="1.5" opacity=".25" />
+    </g>
+  )}
+
+  {kind === 'bruschetta' && (
+    <g>
+      <rect x="22" y="56" width="356" height="196" rx="26" fill="#C9955B" />
+      <rect x="22" y="56" width="356" height="196" rx="26" fill="none" stroke="#A9773F" stroke-width="3" />
+      {[90, 130, 170, 210].map((y) => <path d={`M40 ${y}C140 ${y - 6} 260 ${y + 6} 360 ${y}`} stroke="#B98444" stroke-width="2" fill="none" opacity=".6" />)}
+      {bread.map((b) => (
+        <g transform={`translate(${b.x} ${b.y}) rotate(${b.a})`}>
+          <path d="M-46-34C-30-50 30-50 46-34C54-12 52 20 44 36C24 50-24 50-44 36C-54 18-54-14-46-34Z" fill="#E7BF7E" stroke="#B5803F" stroke-width="7" />
+          <path d="M-30-14l60 0M-30 6l60 0M-30 26l60 0" stroke="#C99A55" stroke-width="3" opacity=".5" />
+        </g>
+      ))}
+      {cubes.map((c) => <rect x={c.x - 6} y={c.y - 6} width="12" height="12" rx="2.5" transform={`rotate(${c.a} ${c.x} ${c.y})`} fill={c.red ? C.red : C.milk} stroke={c.red ? '#A92820' : C.line} stroke-width="1" />)}
+      {bread.map((b) => <g transform={`translate(${b.x - 6} ${b.y - 8}) rotate(${b.a * 3}) scale(.55)`}><path d={leaf} fill={C.green} /></g>)}
+    </g>
+  )}
+
+  {kind === 'pates' && (
+    <g>
+      <circle cx="204" cy="157" r="130" fill="#000" opacity=".1" />
+      <circle cx="200" cy="150" r="130" fill={C.paper} stroke={C.line} stroke-width="2" />
+      <circle cx="200" cy="150" r="106" fill="none" stroke={C.line} stroke-width="1.5" />
+      <circle cx="200" cy="150" r="92" fill={C.red} />
+      {penne.map((p) => (
+        <g transform={`translate(${p.x} ${p.y}) rotate(${p.a})`}>
+          <rect x="-18" y="-7" width="36" height="14" rx="5" fill={C.pasta} stroke={C.pasta2} stroke-width="1.2" />
+          <path d="M-10-6l-3 12M-2-6l-3 12M6-6l-3 12M14-6l-3 12" stroke={C.pasta2} stroke-width="1" opacity=".7" />
+        </g>
+      ))}
+      {blobs(8, 200, 150, 70, 17).map((b) => (
+        <g transform={`translate(${b.x} ${b.y}) rotate(${b.a})`}>
+          <ellipse rx={b.r * b.rx} ry={b.r} fill={C.milk} />
+          <circle cx={b.r * 0.2} cy={b.r * -0.1} r={b.r * 0.22} fill="#E0B266" opacity=".75" />
+        </g>
+      ))}
+      {leaves(3, 200, 150, 50, 0.9).map((l) => <g transform={`translate(${l.x} ${l.y}) rotate(${l.a}) scale(${l.s})`}><path d={leaf} fill={C.green} /></g>)}
+    </g>
+  )}
+
+  {kind === 'chakchouka' && (
+    <g>
+      <rect x="318" y="138" width="78" height="22" rx="10" fill="#2B211B" />
+      <circle cx="204" cy="157" r="132" fill="#000" opacity=".15" />
+      <circle cx="200" cy="150" r="132" fill="#2B211B" />
+      <circle cx="200" cy="150" r="118" fill="#3A2C24" />
+      <circle cx="200" cy="150" r="110" fill="#B8322A" />
+      {blobs(18, 200, 150, 100, 5).map((b) => <circle cx={b.x} cy={b.y} r={b.r} fill="#D24B3C" opacity=".7" />)}
+      {peppers.map((p) => <path transform={`translate(${p.x} ${p.y}) rotate(${p.a})`} d="M-16 0C-8-8 8-8 16 0" fill="none" stroke={p.c} stroke-width="7" stroke-linecap="round" />)}
+      {eggs.map(([x, y]) => (
+        <g transform={`translate(${x} ${y})`}>
+          <path d="M-28-4C-26-22 10-28 26-12C34 4 20 24-2 24C-22 24-30 10-28-4Z" fill={C.paper} />
+          <circle cx="0" cy="0" r="11" fill="#F2B233" />
+          <circle cx="-3" cy="-3" r="3.5" fill="#FAD27A" />
+        </g>
+      ))}
+      {blobs(7, 200, 150, 70, 11).map((b) => <ellipse cx={b.x} cy={b.y} rx={b.r * b.rx} ry={b.r} transform={`rotate(${b.a} ${b.x} ${b.y})`} fill={C.milk} stroke={C.line} stroke-width="1" />)}
+      {blobs(24, 200, 150, 100, 2).map((b) => <circle cx={b.x} cy={b.y} r={b.r} fill={C.green} />)}
+    </g>
+  )}
+
+  {kind === 'salade' && (
+    <g>
+      <circle cx="204" cy="157" r="132" fill="#000" opacity=".1" />
+      <circle cx="200" cy="150" r="132" fill="#1C3F6E" />
+      <circle cx="200" cy="150" r="120" fill="#24497C" />
+      <circle cx="200" cy="150" r="108" fill={C.paper} />
+      {fusilli.map((f) => (
+        <g transform={`translate(${f.x} ${f.y}) rotate(${f.a})`}>
+          <path d="M-18 0c3-8 6-8 9 0s6 8 9 0 6-8 9 0 6 8 9 0" fill="none" stroke={C.pasta} stroke-width="9" stroke-linecap="round" />
+          <path d="M-18 0c3-8 6-8 9 0s6 8 9 0 6-8 9 0 6 8 9 0" fill="none" stroke={C.pasta2} stroke-width="1.2" opacity=".6" />
+        </g>
+      ))}
+      {olives.map((o) => <ellipse cx={o.x} cy={o.y} rx="7" ry="5" transform={`rotate(${o.a} ${o.x} ${o.y})`} fill="#3B2E2A" />)}
+      {tomatoesHalf.map((t) => <g transform={`translate(${t.x} ${t.y})`}><circle r="13" fill={C.red} /><circle r="9" fill={C.red2} /><circle r="2.5" fill="#F2B27A" cx="-3" /><circle r="2.5" fill="#F2B27A" cx="3" /></g>)}
+      {bocc.map((b) => <g transform={`translate(${b.x} ${b.y})`}><circle r="13" fill={C.milk} stroke={C.line} stroke-width="1.2" /><path d="M-7-5a8 8 0 0 1 7-3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none" /></g>)}
+      {leaves(5, 200, 150, 75, 0.85).map((l) => <g transform={`translate(${l.x} ${l.y}) rotate(${l.a}) scale(${l.s})`}><path d={leaf} fill={C.green} /><path d="M3 0H30" stroke={C.green2} stroke-width="1.2" /></g>)}
+    </g>
+  )}
+</svg>
+<style>
+  .food-art { display: block; inline-size: 100%; block-size: 100%; }
+</style>

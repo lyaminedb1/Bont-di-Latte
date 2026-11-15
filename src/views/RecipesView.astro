@@ -1,0 +1,50 @@
+---
+import Page from '../layouts/Page.astro';
+import PageBanner from '../components/PageBanner.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import { type Lang } from '../i18n';
+import { ui } from '../i18n/ui';
+import { categories, recipes } from '../data/catalog';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = ui[lang];
+const p = u.pages.recipes;
+---
+<Page lang={lang} title={p.meta} description={p.lead} path="recettes/" current="recettes">
+  <PageBanner lang={lang} title={p.title} lead={p.lead} art="pates" />
+  <section class="container section-tight" data-recipes-filter>
+    <form id="recherche" class="rf-form" role="search" action="" method="get">
+      <label class="sr-only" for={`rf-q-${lang}`}>{u.search.label}</label>
+      <input id={`rf-q-${lang}`} name="q" type="search" placeholder={u.search.placeholder} autocomplete="off" data-rf-q />
+      <button class="pill pill--red" type="submit">{u.search.submit}</button>
+    </form>
+    <div class="rf-chips" role="group" aria-label={p.filter}>
+      <button type="button" class="rf-chip" data-rf-cat="" aria-pressed="true">{p.all}</button>
+      {categories.map((c) => <button type="button" class="rf-chip" data-rf-cat={c.id} aria-pressed="false">{c.label[lang]}</button>)}
+    </div>
+    <p class="rf-count" aria-live="polite"><span data-rf-count>{recipes.length}</span> {p.results}</p>
+    <ul class="rf-grid">
+      {recipes.map((r) => <li data-rf-item><RecipeCard lang={lang} recipe={r} headingLevel="h2" /></li>)}
+    </ul>
+    <p class="rf-empty" data-rf-empty hidden>{p.empty}</p>
+  </section>
+</Page>
+<style>
+  .rf-form { display: flex; gap: 0.6rem; max-inline-size: 38rem; margin-inline: auto; }
+  .rf-form input {
+    flex: 1; min-inline-size: 0; min-block-size: 3rem; padding: 0.6rem 1.1rem;
+    border: 1.5px solid var(--line); border-radius: 999px; background: var(--paper); font-size: 1rem;
+  }
+  .rf-form input:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+  .rf-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-block: var(--space-m) var(--space-s); }
+  .rf-chip {
+    min-block-size: 2.5rem; padding: 0.4rem 1.1rem; border: 1.5px solid var(--navy); border-radius: 999px;
+    background: transparent; color: var(--navy); font-weight: 500; cursor: pointer; transition: background-color 0.2s, color 0.2s;
+  }
+  .rf-chip[aria-pressed='true'] { background: var(--navy); color: var(--milk); }
+  @media (hover: hover) { .rf-chip:hover { background: var(--cream); } .rf-chip[aria-pressed='true']:hover { background: var(--navy-deep); } }
+  .rf-count { text-align: center; color: var(--ink-soft); margin-block-end: var(--space-m); }
+  .rf-grid { display: grid; gap: var(--space-m); list-style: none; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+  .rf-grid > li[hidden] { display: none; }
+  .rf-empty { text-align: center; padding-block: var(--space-l); color: var(--ink-soft); }
+</style>
