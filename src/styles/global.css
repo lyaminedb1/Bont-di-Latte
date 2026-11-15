@@ -1,23 +1,25 @@
 /* ==========================================================================
-   BONTÀ DI LATTE · CHARTE (tokens)
-   Ne pas modifier les couleurs de marque. Contrastes vérifiés (WCAG AA) :
-   ink/milk 13.9 · ink-soft/milk 5.5 · ink-soft/cream 4.9 · navy/milk 11.5
-   milk/navy-deep 14.6 · mist/navy-deep 10.8 · mist/navy 8.6 · milk/green 4.7 · milk/red 4.7
+   BONTÀ DI LATTE · CHARTE (tokens) — palette « lait & Méditerranée »
+   Bleu du logo + blancs froids + bleu ciel pâle ; rouge et vert en touches.
+   Contrastes vérifiés (WCAG AA) : ink/milk 15.1 · ink-soft/milk 6.4 ·
+   ink-soft/cream 5.8 · navy/cream 11.1 · milk/red 4.7 · mist/navy 8.8 ·
+   mist/navy-deep 11.1 · green/milk 4.9 · sky/milk 5.7
    ========================================================================== */
 :root {
   /* Couleurs de marque */
   --navy: #0b2e6b;
   --navy-deep: #071e47;
-  --milk: #f7f0e6;
-  --cream: #efe3d0;
-  --ink: #2b211b;
-  --ink-soft: #6e5e50;
+  --milk: #f5f8fc;
+  --cream: #e6eef9;
+  --ink: #16203a;
+  --ink-soft: #4f5b74;
   --green: #1e7b4a;
-  --red: #c8322b;
+  --red: #d42a2f;
   /* Dérivées (usage secondaire) */
-  --mist: #c9d3e0;          /* texte secondaire sur bleu */
-  --line: #e0d2bc;          /* filets sur fond clair */
-  --line-dark: rgb(247 240 230 / 0.18);
+  --mist: #c9d6ea;          /* texte secondaire sur bleu */
+  --line: #d6e0ef;          /* filets sur fond clair */
+  --sky: #1f5fbf;           /* bleu ciel : surtitres et petits accents */
+  --line-dark: rgb(245 248 252 / 0.18);
   --white: #ffffff;         /* uniquement pour le filet vert-blanc-rouge */
 
   /* Typographies */
@@ -49,7 +51,7 @@
 
   --radius: 1.25rem;
   --radius-s: 0.625rem;
-  --shadow-paper: 0 1px 0 rgb(43 33 27 / 0.04), 0 18px 40px -18px rgb(43 33 27 / 0.28);
+  --shadow-paper: 0 1px 0 rgb(7 30 71 / 0.04), 0 18px 40px -18px rgb(7 30 71 / 0.28);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --header-h: 4.25rem;
 
@@ -182,7 +184,7 @@ p, li { text-wrap: pretty; }
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--navy);
+  color: var(--sky);
 }
 :lang(ar) .kicker { letter-spacing: 0; font-size: var(--step-0); }
 .on-dark .kicker, .section--navy .kicker { color: var(--mist); }
@@ -256,7 +258,7 @@ p, li { text-wrap: pretty; }
 [dir='rtl'] .icon-arrow { transform: scaleX(-1); }
 
 .btn--milk { --btn-bg: var(--milk); --btn-fg: var(--navy-deep); --btn-border: var(--milk); }
-.btn--ghost-light { --btn-bg: transparent; --btn-fg: var(--milk); --btn-border: rgb(247 240 230 / 0.7); }
+.btn--ghost-light { --btn-bg: transparent; --btn-fg: var(--milk); --btn-border: rgb(245 248 252 / 0.7); }
 @media (hover: hover) {
   .btn--ghost-light:hover { --btn-bg: var(--milk); --btn-fg: var(--navy-deep); }
   .btn--ghost:hover { --btn-bg: var(--navy); --btn-fg: var(--milk); }

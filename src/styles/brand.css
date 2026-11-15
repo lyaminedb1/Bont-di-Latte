@@ -3,7 +3,7 @@
    S'appuie sur les tokens de global.css (couleurs de la charte inchangées).
    ========================================================================== */
 :root {
-  --paper: #fffcf7;          /* cartes et en-tête : blanc cassé, jamais blanc pur */
+  --paper: #ffffff;          /* cartes et en-tête : blanc cassé, jamais blanc pur */
   --radius-l: 1.5rem;
   --shadow-card: 0 1px 2px rgb(7 30 71 / 0.06), 0 18px 36px -20px rgb(7 30 71 / 0.35);
   --header-h: 4.5rem;
@@ -120,7 +120,7 @@
   border-radius: 50%;
   background: var(--red);
   color: var(--milk);
-  box-shadow: 0 6px 16px -6px rgb(43 33 27 / 0.45);
+  box-shadow: 0 6px 16px -6px rgb(7 30 71 / 0.45);
   cursor: pointer;
   transition: opacity 0.25s, transform 0.25s var(--ease-out);
 }

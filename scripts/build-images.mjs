@@ -6,7 +6,7 @@ import { mkdir, copyFile } from 'node:fs/promises';
 const SRC_OVALE = 'assets/img/logo-ovale.png'; // détouré depuis logo-ovale-original.jpg (scripts/cutout-logo.py)
 const SRC_SYMBOLE = 'assets/img/symbole.png';
 const OUT = 'public/img';
-const MILK = '#F7F0E6';
+const MILK = '#F5F8FC';
 
 await mkdir(OUT, { recursive: true });
 
@@ -34,7 +34,7 @@ await sharp({ create: { width: 180, height: 180, channels: 4, background: MILK }
 const band = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <rect x="0" y="606" width="400" height="24" fill="#1E7B4A"/>
   <rect x="400" y="606" width="400" height="24" fill="#FFFFFF"/>
-  <rect x="800" y="606" width="400" height="24" fill="#C8322B"/>
+  <rect x="800" y="606" width="400" height="24" fill="#D42A2F"/>
   <rect x="0" y="605" width="1200" height="1" fill="#E2D5C0"/>
 </svg>`);
 await sharp({ create: { width: 1200, height: 630, channels: 4, background: MILK } })

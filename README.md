@@ -170,11 +170,13 @@ npm run images
 | Couleur | Hex | Usage |
 | --- | --- | --- |
 | Bleu marine | `#0B2E6B` | marque (aligné sur le logo), boutons, titres |
-| Bleu foncé | `#071E47` | héros, section Professionnels, pied de page |
-| Blanc lait | `#F7F0E6` | fond principal (jamais de blanc pur) |
-| Crème | `#EFE3D0` | sections alternées |
-| Encre | `#2B211B` | texte |
-| Encre douce | `#6E5E50` | texte secondaire (contraste 5,5:1 sur blanc lait) |
-| Vert / Rouge | `#1E7B4A` / `#C8322B` | filets fins uniquement |
+| Bleu foncé | `#071E47` | pied de page, bandeaux de pages, section Professionnels |
+| Bleu ciel | `#1F5FBF` | surtitres et petits accents |
+| Blanc lait | `#F5F8FC` | fond principal (blanc froid, jamais de blanc pur en fond) |
+| Bleu pâle | `#E6EEF9` | sections alternées, fonds d'illustration |
+| Encre | `#16203A` | texte |
+| Encre douce | `#4F5B74` | texte secondaire (contraste 6,4:1 sur blanc lait) |
+| Rouge | `#D42A2F` | boutons principaux, mot clé des titres, filets |
+| Vert | `#1E7B4A` | filets, coches, bouton WhatsApp |
 
 Accessibilité : tous les textes respectent le contraste WCAG AA. Le site propose un lien d'évitement, des focus visibles, des libellés de formulaire et des textes alternatifs. La navigation au clavier est complète, et toutes les animations sont coupées si l'utilisateur a demandé moins de mouvement.

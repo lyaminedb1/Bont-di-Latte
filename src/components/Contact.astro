@@ -49,24 +49,24 @@ const c = site.contact;
     <!-- Carte légère : un plan dessiné qui ouvre Google Maps (pas d'iframe) -->
     <a class="map" href={c.mapsUrl} target="_blank" rel="noopener" data-reveal style="--reveal-delay: 120ms">
       <svg viewBox="0 0 480 400" role="img" aria-label={d.mapAlt} preserveAspectRatio="xMidYMid slice">
-        <rect width="480" height="400" fill="#F7F0E6" />
-        <g fill="none" stroke="#E0D2BC" stroke-width="14" stroke-linecap="round">
+        <rect width="480" height="400" fill="#F5F8FC" />
+        <g fill="none" stroke="#D3DEEF" stroke-width="14" stroke-linecap="round">
           <path d="M-20 120C80 110 150 160 240 150S400 90 500 110" />
           <path d="M120 -20C130 80 110 160 150 240S170 360 160 420" />
           <path d="M-20 300C90 290 200 320 300 290S420 250 500 270" />
           <path d="M340 -20C320 60 350 150 330 220S350 340 380 420" />
         </g>
-        <g fill="none" stroke="#E9DDCA" stroke-width="6" stroke-linecap="round">
+        <g fill="none" stroke="#E2EAF6" stroke-width="6" stroke-linecap="round">
           <path d="M40 200 220 210 300 190 460 200" />
           <path d="M240 20 250 140 230 260 250 380" />
           <path d="M20 40C80 60 120 40 200 60" />
           <path d="M380 330C420 320 440 340 470 330" />
         </g>
-        <path d="M-10 360C60 340 120 380 200 370" fill="none" stroke="#C9D3E0" stroke-width="18" stroke-linecap="round" opacity=".7" />
+        <path d="M-10 360C60 340 120 380 200 370" fill="none" stroke="#BCD0EE" stroke-width="18" stroke-linecap="round" opacity=".7" />
         <g transform="translate(240 200)">
           <ellipse cx="0" cy="34" rx="26" ry="7" fill="#0B2E6B" opacity=".15" />
           <path d="M0 34S-30 4-30-16a30 30 0 0 1 60 0C30 4 0 34 0 34Z" fill="#0B2E6B" />
-          <path d="M0-30s-9 10.8-9 16.5a9 9 0 0 0 18 0C9-19.2 0-30 0-30Z" fill="#F7F0E6" />
+          <path d="M0-30s-9 10.8-9 16.5a9 9 0 0 0 18 0C9-19.2 0-30 0-30Z" fill="#F5F8FC" />
         </g>
       </svg>
       <span class="map-cta"><Icon name="pin" />{d.mapCta}<Icon name="arrow" /><span class="sr-only"> {all.a11y.newTab}</span></span>

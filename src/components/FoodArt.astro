@@ -5,9 +5,9 @@ import type { FoodArtKind } from '../data/catalog';
 interface Props { kind: FoodArtKind; label?: string; bg?: 'cream' | 'navy' | 'milk' | 'none'; class?: string; slice?: boolean }
 const { kind, label, bg = 'cream', class: cls, slice = true } = Astro.props;
 
-const BG = { cream: '#EFE3D0', navy: '#0B2E6B', milk: '#F7F0E6', none: 'none' }[bg];
+const BG = { cream: '#E6EEF9', navy: '#0B2E6B', milk: '#F5F8FC', none: 'none' }[bg];
 const C = {
-  red: '#C8322B', red2: '#DA4A40', milk: '#F7F0E6', paper: '#FBF7F0', line: '#E4D5BE',
+  red: '#C8322B', red2: '#DA4A40', milk: '#F7F0E6', paper: '#FFFFFF', line: '#D9E2EF',
   green: '#1E7B4A', green2: '#2E9A5F', crust: '#D99B55', crust2: '#B87A3A', pasta: '#E9C17A', pasta2: '#C99A4A', ink: '#2B211B',
 };
 
